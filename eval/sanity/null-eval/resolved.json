@@ -1,0 +1,10 @@
+{
+  "astropy__astropy-12907": false,
+  "django__django-11790": false,
+  "django__django-11848": false,
+  "django__django-11885": false,
+  "django__django-12209": false,
+  "sphinx-doc__sphinx-10323": false,
+  "sphinx-doc__sphinx-10435": false,
+  "sphinx-doc__sphinx-7757": false
+}

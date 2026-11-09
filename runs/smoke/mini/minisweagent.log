@@ -1,0 +1,7 @@
+2026-11-08 07:50:12,114 - minisweagent - INFO - Loading dataset data/dev, split test...
+2026-11-08 07:50:13,068 - minisweagent - INFO - Instance filter: 4 -> 1 instances
+2026-11-08 07:50:13,070 - minisweagent - INFO - Running on 1 instances...
+2026-11-08 07:50:13,072 - minisweagent - INFO - Building agent config from specs: ['swebench.yaml', 'runs/smoke/mini_override.yaml']
+2026-11-08 07:50:22,440 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-0fd48405 -w /testbed --rm swebench/sweb.eval.x86_64.django_1776_django-12304@sha256:46ad662e0ab1ab9417a26ceae392395f255634a054c25faf0fcfcd43aa52702c sleep 2h
+2026-11-08 07:50:23,352 - minisweagent.environment - INFO - Started container minisweagent-0fd48405 with ID 8e4b4cb2a7c4d9c477fa4c163b26bc15afb1697291a5b0bb75acb8bbd1b75f62
+2026-11-08 07:50:46,262 - minisweagent - INFO - Saved trajectory to 'runs/smoke/mini/django__django-12304/django__django-12304.traj.json'

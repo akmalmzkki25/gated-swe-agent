@@ -1,0 +1,10 @@
+# Identical for the baseline and the gated agent. Enforced by the same model client
+# (mini-swe-agent's LitellmModel step and cost accounting) in both.
+per_task:
+  model_calls: 100      # mini: agent.step_limit
+  cost_usd: 1.0         # mini: agent.cost_limit
+  wall_clock_s: 7200    # safety net only: mini's own environment.container_timeout default ("2h"); same for the gated agent
+global:
+  cost_usd: 80          # MSWEA_GLOBAL_COST_LIMIT / our own counter: hard stop for the whole project
+seeds: [0, 1, 2]
+workers: 2              # agent workers; the harness also uses 2

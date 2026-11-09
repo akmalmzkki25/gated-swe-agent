@@ -1,0 +1,60 @@
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 1cecb1f79..6ba6ee840 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -2676,9 +2676,13 @@ class PropertyDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):  #
+         if inspect.isabstractmethod(self.object):
+             self.add_line('   :abstractmethod:', sourcename)
+ 
+-        if safe_getattr(self.object, 'fget', None) and self.config.autodoc_typehints != 'none':
++        fget = safe_getattr(self.object, 'fget', None)
++        if fget is None and hasattr(self.object, "__func__"):
++            fget = safe_getattr(self.object.__func__, 'fget', None)
++
++        if fget and self.config.autodoc_typehints != 'none':
+             try:
+-                signature = inspect.signature(self.object.fget,
++                signature = inspect.signature(fget,
+                                               type_aliases=self.config.autodoc_type_aliases)
+                 if signature.return_annotation is not Parameter.empty:
+                     objrepr = stringify_typehint(signature.return_annotation)
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index 23dd9e930..679c0ee4d 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -390,7 +390,13 @@ def isproperty(obj: Any) -> bool:
+         if isinstance(obj, cached_property):
+             return True
+ 
+-    return isinstance(obj, property)
++    if isinstance(obj, property):
++        return True
++
++    if (isclassmethod(obj) or isstaticmethod(obj)) and hasattr(obj, "__func__"):
++        return isproperty(obj.__func__)
++
++    return False
+ 
+ 
+ def isgenericalias(obj: Any) -> bool:
+@@ -411,6 +417,10 @@ def isgenericalias(obj: Any) -> bool:
+ def safe_getattr(obj: Any, name: str, *defargs: Any) -> Any:
+     """A getattr() that turns all exceptions into AttributeErrors."""
+     try:
++        if isclass(obj) and name in obj.__dict__:
++            val = obj.__dict__[name]
++            if isproperty(val):
++                return val
+         return getattr(obj, name, *defargs)
+     except Exception as exc:
+         # sometimes accessing a property raises an exception (e.g.
+@@ -837,6 +847,9 @@ def getdoc(obj: Any, attrgetter: Callable = safe_getattr,
+     * inherited docstring
+     * inherited decorated methods
+     """
++    if (isclassmethod(obj) or isstaticmethod(obj)) and hasattr(obj, "__func__"):
++        if isproperty(obj.__func__):
++            obj = obj.__func__
+     doc = attrgetter(obj, '__doc__', None)
+     if ispartial(obj) and doc == obj.__class__.__doc__:
+         return getdoc(obj.func)

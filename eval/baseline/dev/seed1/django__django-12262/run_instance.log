@@ -1,0 +1,74 @@
+2026-11-08 12:11:33,734 - INFO - Creating container for django__django-12262...
+2026-11-08 12:11:33,811 - INFO - Container for django__django-12262 created: 70c86e7c9b816b766ddb03acb98d6f97998e830e7ff305a0676d50490ffa2f1e
+2026-11-08 12:11:33,996 - INFO - Container for django__django-12262 started: 70c86e7c9b816b766ddb03acb98d6f97998e830e7ff305a0676d50490ffa2f1e
+2026-11-08 12:11:34,000 - INFO - Intermediate patch for django__django-12262 written to logs/run_evaluation/baseline-dev-seed1/gemini__gemini-3.5-flash-lite/django__django-12262/patch.diff, now applying to container...
+2026-11-08 12:11:34,134 - INFO - >>>>> Applied Patch:
+Checking patch django/template/library.py...
+Applied patch django/template/library.py cleanly.
+
+2026-11-08 12:11:34,880 - INFO - Git diff before:
+diff --git a/django/template/library.py b/django/template/library.py
+index 20bc86dac8..89645bed73 100644
+--- a/django/template/library.py
++++ b/django/template/library.py
+@@ -261,16 +261,16 @@ def parse_bits(parser, bits, params, varargs, varkw, defaults,
+         if kwarg:
+             # The kwarg was successfully extracted
+             param, value = kwarg.popitem()
+-            if param not in params and param not in unhandled_kwargs and varkw is None:
+-                # An unexpected keyword argument was supplied
+-                raise TemplateSyntaxError(
+-                    "'%s' received unexpected keyword argument '%s'" %
+-                    (name, param))
+-            elif param in kwargs:
++            if param in kwargs:
+                 # The keyword argument has already been supplied once
+                 raise TemplateSyntaxError(
+                     "'%s' received multiple values for keyword argument '%s'" %
+                     (name, param))
++            elif param not in params and param not in kwonly and varkw is None:
++                # An unexpected keyword argument was supplied
++                raise TemplateSyntaxError(
++                    "'%s' received unexpected keyword argument '%s'" %
++                    (name, param))
+             else:
+                 # All good, record the keyword argument
+                 kwargs[str(param)] = value
+2026-11-08 12:11:34,886 - INFO - Eval script for django__django-12262 written to logs/run_evaluation/baseline-dev-seed1/gemini__gemini-3.5-flash-lite/django__django-12262/eval.sh; copying to container...
+2026-11-08 12:11:39,365 - INFO - Test runtime: 4.37 seconds
+2026-11-08 12:11:39,370 - INFO - Test output for django__django-12262 written to logs/run_evaluation/baseline-dev-seed1/gemini__gemini-3.5-flash-lite/django__django-12262/test_output.txt
+2026-11-08 12:11:39,425 - INFO - Git diff after:
+diff --git a/django/template/library.py b/django/template/library.py
+index 20bc86dac8..89645bed73 100644
+--- a/django/template/library.py
++++ b/django/template/library.py
+@@ -261,16 +261,16 @@ def parse_bits(parser, bits, params, varargs, varkw, defaults,
+         if kwarg:
+             # The kwarg was successfully extracted
+             param, value = kwarg.popitem()
+-            if param not in params and param not in unhandled_kwargs and varkw is None:
+-                # An unexpected keyword argument was supplied
+-                raise TemplateSyntaxError(
+-                    "'%s' received unexpected keyword argument '%s'" %
+-                    (name, param))
+-            elif param in kwargs:
++            if param in kwargs:
+                 # The keyword argument has already been supplied once
+                 raise TemplateSyntaxError(
+                     "'%s' received multiple values for keyword argument '%s'" %
+                     (name, param))
++            elif param not in params and param not in kwonly and varkw is None:
++                # An unexpected keyword argument was supplied
++                raise TemplateSyntaxError(
++                    "'%s' received unexpected keyword argument '%s'" %
++                    (name, param))
+             else:
+                 # All good, record the keyword argument
+                 kwargs[str(param)] = value
+2026-11-08 12:11:39,425 - INFO - Grading answer for django__django-12262...
+2026-11-08 12:11:39,429 - INFO - report: {'django__django-12262': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_inclusion_tag_errors (template_tests.test_custom.InclusionTagTests)', 'test_inclusion_tags (template_tests.test_custom.InclusionTagTests)', 'test_simple_tag_errors (template_tests.test_custom.SimpleTagTests)', 'test_simple_tags (template_tests.test_custom.SimpleTagTests)'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_decorated_filter (template_tests.test_custom.CustomFilterTests)', 'test_filter (template_tests.test_custom.CustomFilterTests)', 'test_15070_use_l10n (template_tests.test_custom.InclusionTagTests)', 'test_include_tag_missing_context (template_tests.test_custom.InclusionTagTests)', 'test_inclusion_tag_registration (template_tests.test_custom.InclusionTagTests)', 'test_inclusion_tags_from_template (template_tests.test_custom.InclusionTagTests)', 'test_no_render_side_effect (template_tests.test_custom.InclusionTagTests)', 'test_render_context_is_cleared (template_tests.test_custom.InclusionTagTests)', 'test_simple_tag_escaping_autoescape_off (template_tests.test_custom.SimpleTagTests)', 'test_simple_tag_explicit_escaping (template_tests.test_custom.SimpleTagTests)', 'test_simple_tag_format_html_escaping (template_tests.test_custom.SimpleTagTests)', 'test_simple_tag_missing_context (template_tests.test_custom.SimpleTagTests)', 'test_simple_tag_naive_escaping (template_tests.test_custom.SimpleTagTests)', 'test_simple_tag_registration (template_tests.test_custom.SimpleTagTests)', 'test_load_annotated_function (template_tests.test_custom.TemplateTagLoadingTests)', 'test_load_error (template_tests.test_custom.TemplateTagLoadingTests)', 'test_load_error_egg (template_tests.test_custom.TemplateTagLoadingTests)', 'test_load_working_egg (template_tests.test_custom.TemplateTagLoadingTests)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-12262: resolved: True
+2026-11-08 12:11:39,434 - INFO - Attempting to stop container sweb.eval.django__django-12262.baseline-dev-seed1...
+2026-11-08 12:11:54,773 - INFO - Container sweb.eval.django__django-12262.baseline-dev-seed1 stopped successfully.
+2026-11-08 12:11:54,773 - INFO - Attempting to remove container sweb.eval.django__django-12262.baseline-dev-seed1...
+2026-11-08 12:11:54,827 - INFO - Container sweb.eval.django__django-12262.baseline-dev-seed1 removed successfully.

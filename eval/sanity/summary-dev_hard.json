@@ -1,0 +1,10 @@
+{
+  "split": "dev_hard",
+  "n_tasks": 8,
+  "gold_resolved": 8,
+  "null_resolved": 0,
+  "gold_not_resolved": [],
+  "gold_missing_report": 0,
+  "null_resolved_ids": [],
+  "null_missing_report": 0
+}

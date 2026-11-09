@@ -1,0 +1,9 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# harness scratch output; the reports we keep are copied into eval/
+logs/
+*.egg-info/
+ai-logs/

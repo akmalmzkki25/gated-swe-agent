@@ -1,0 +1,94 @@
+2026-11-08 14:15:33,910 - INFO - Creating container for sphinx-doc__sphinx-9229...
+2026-11-08 14:15:33,993 - INFO - Container for sphinx-doc__sphinx-9229 created: 4c9636956da7904e0894a196d77652af0a2820570f41a9d3eff6eb05203a442c
+2026-11-08 14:15:34,167 - INFO - Container for sphinx-doc__sphinx-9229 started: 4c9636956da7904e0894a196d77652af0a2820570f41a9d3eff6eb05203a442c
+2026-11-08 14:15:34,171 - INFO - Intermediate patch for sphinx-doc__sphinx-9229 written to logs/run_evaluation/sanity-gold-dev_hard/gold/sphinx-doc__sphinx-9229/patch.diff, now applying to container...
+2026-11-08 14:15:34,329 - INFO - >>>>> Applied Patch:
+Checking patch sphinx/ext/autodoc/__init__.py...
+Applied patch sphinx/ext/autodoc/__init__.py cleanly.
+
+2026-11-08 14:15:34,965 - INFO - Git diff before:
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 1f4c98284..18fb0c92e 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1676,7 +1676,11 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:
+     def get_doc(self, ignore: int = None) -> Optional[List[List[str]]]:
+         if self.doc_as_attr:
+             # Don't show the docstring of the class when it is an alias.
+-            return None
++            comment = self.get_variable_comment()
++            if comment:
++                return []
++            else:
++                return None
+ 
+         lines = getattr(self, '_new_docstrings', None)
+         if lines is not None:
+@@ -1721,9 +1725,18 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:
+         tab_width = self.directive.state.document.settings.tab_width
+         return [prepare_docstring(docstring, ignore, tab_width) for docstring in docstrings]
+ 
++    def get_variable_comment(self) -> Optional[List[str]]:
++        try:
++            key = ('', '.'.join(self.objpath))
++            analyzer = ModuleAnalyzer.for_module(self.get_real_modname())
++            analyzer.analyze()
++            return list(self.analyzer.attr_docs.get(key, []))
++        except PycodeError:
++            return None
++
+     def add_content(self, more_content: Optional[StringList], no_docstring: bool = False
+                     ) -> None:
+-        if self.doc_as_attr:
++        if self.doc_as_attr and not self.get_variable_comment():
+             try:
+                 more_content = StringList([_('alias of %s') % restify(self.object)], source='')
+             except AttributeError:
+2026-11-08 14:15:34,969 - INFO - Eval script for sphinx-doc__sphinx-9229 written to logs/run_evaluation/sanity-gold-dev_hard/gold/sphinx-doc__sphinx-9229/eval.sh; copying to container...
+2026-11-08 14:15:38,985 - INFO - Test runtime: 3.91 seconds
+2026-11-08 14:15:38,989 - INFO - Test output for sphinx-doc__sphinx-9229 written to logs/run_evaluation/sanity-gold-dev_hard/gold/sphinx-doc__sphinx-9229/test_output.txt
+2026-11-08 14:15:39,042 - INFO - Git diff after:
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 1f4c98284..18fb0c92e 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1676,7 +1676,11 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:
+     def get_doc(self, ignore: int = None) -> Optional[List[List[str]]]:
+         if self.doc_as_attr:
+             # Don't show the docstring of the class when it is an alias.
+-            return None
++            comment = self.get_variable_comment()
++            if comment:
++                return []
++            else:
++                return None
+ 
+         lines = getattr(self, '_new_docstrings', None)
+         if lines is not None:
+@@ -1721,9 +1725,18 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:
+         tab_width = self.directive.state.document.settings.tab_width
+         return [prepare_docstring(docstring, ignore, tab_width) for docstring in docstrings]
+ 
++    def get_variable_comment(self) -> Optional[List[str]]:
++        try:
++            key = ('', '.'.join(self.objpath))
++            analyzer = ModuleAnalyzer.for_module(self.get_real_modname())
++            analyzer.analyze()
++            return list(self.analyzer.attr_docs.get(key, []))
++        except PycodeError:
++            return None
++
+     def add_content(self, more_content: Optional[StringList], no_docstring: bool = False
+                     ) -> None:
+-        if self.doc_as_attr:
++        if self.doc_as_attr and not self.get_variable_comment():
+             try:
+                 more_content = StringList([_('alias of %s') % restify(self.object)], source='')
+             except AttributeError:
+2026-11-08 14:15:39,042 - INFO - Grading answer for sphinx-doc__sphinx-9229...
+2026-11-08 14:15:39,050 - INFO - report: {'sphinx-doc__sphinx-9229': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['tests/test_ext_autodoc_autoclass.py::test_class_alias_having_doccomment'], 'failure': []}, 'PASS_TO_PASS': {'success': ['tests/test_ext_autodoc_autoclass.py::test_classes', 'tests/test_ext_autodoc_autoclass.py::test_instance_variable', 'tests/test_ext_autodoc_autoclass.py::test_inherited_instance_variable', 'tests/test_ext_autodoc_autoclass.py::test_uninitialized_attributes', 'tests/test_ext_autodoc_autoclass.py::test_undocumented_uninitialized_attributes', 'tests/test_ext_autodoc_autoclass.py::test_decorators', 'tests/test_ext_autodoc_autoclass.py::test_properties', 'tests/test_ext_autodoc_autoclass.py::test_slots_attribute', 'tests/test_ext_autodoc_autoclass.py::test_show_inheritance_for_subclass_of_generic_type', 'tests/test_ext_autodoc_autoclass.py::test_class_doc_from_class', 'tests/test_ext_autodoc_autoclass.py::test_class_doc_from_init', 'tests/test_ext_autodoc_autoclass.py::test_class_doc_from_both', 'tests/test_ext_autodoc_autoclass.py::test_class_alias'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sphinx-doc__sphinx-9229: resolved: True
+2026-11-08 14:15:39,056 - INFO - Attempting to stop container sweb.eval.sphinx-doc__sphinx-9229.sanity-gold-dev_hard...
+2026-11-08 14:15:54,531 - INFO - Container sweb.eval.sphinx-doc__sphinx-9229.sanity-gold-dev_hard stopped successfully.
+2026-11-08 14:15:54,532 - INFO - Attempting to remove container sweb.eval.sphinx-doc__sphinx-9229.sanity-gold-dev_hard...
+2026-11-08 14:15:54,582 - INFO - Container sweb.eval.sphinx-doc__sphinx-9229.sanity-gold-dev_hard removed successfully.

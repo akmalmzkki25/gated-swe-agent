@@ -1,0 +1,15 @@
+diff --git a/sphinx/domains/python.py b/sphinx/domains/python.py
+index 79d7e4f46..63427a4bf 100644
+--- a/sphinx/domains/python.py
++++ b/sphinx/domains/python.py
+@@ -1315,6 +1315,10 @@ class PythonDomain(Domain):
+         else:
+             return make_refnode(builder, fromdocname, obj[0], obj[1], contnode, name)
+ 
++    def process_field_xref(self, pnode: pending_xref) -> None:
++        pnode['py:module'] = self.env.ref_context.get('py:module')
++        pnode['py:class'] = self.env.ref_context.get('py:class')
++
+     def resolve_any_xref(self, env: BuildEnvironment, fromdocname: str, builder: Builder,
+                          target: str, node: pending_xref, contnode: Element
+                          ) -> List[Tuple[str, Element]]:

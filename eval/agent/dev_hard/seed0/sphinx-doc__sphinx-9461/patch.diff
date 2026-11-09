@@ -1,0 +1,91 @@
+diff --git a/sphinx/domains/python.py b/sphinx/domains/python.py
+index d79de154e..00a9cb4a1 100644
+--- a/sphinx/domains/python.py
++++ b/sphinx/domains/python.py
+@@ -852,6 +852,7 @@ class PyProperty(PyObject):
+     option_spec = PyObject.option_spec.copy()
+     option_spec.update({
+         'abstractmethod': directives.flag,
++        'classmethod': directives.flag,
+         'type': directives.unchanged,
+     })
+ 
+@@ -868,6 +869,8 @@ class PyProperty(PyObject):
+         prefix = ['property']
+         if 'abstractmethod' in self.options:
+             prefix.insert(0, 'abstract')
++        if 'classmethod' in self.options:
++            prefix.insert(0, 'classmethod')
+ 
+         return ' '.join(prefix) + ' '
+ 
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 1cecb1f79..0f1672974 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -2675,10 +2675,13 @@ class PropertyDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):  #
+         sourcename = self.get_sourcename()
+         if inspect.isabstractmethod(self.object):
+             self.add_line('   :abstractmethod:', sourcename)
++        if inspect.isclassmethod(self.object):
++            self.add_line('   :classmethod:', sourcename)
+ 
+-        if safe_getattr(self.object, 'fget', None) and self.config.autodoc_typehints != 'none':
++        prop_obj = self.object.__func__ if isinstance(self.object, classmethod) else self.object
++        if safe_getattr(prop_obj, 'fget', None) and self.config.autodoc_typehints != 'none':
+             try:
+-                signature = inspect.signature(self.object.fget,
++                signature = inspect.signature(prop_obj.fget,
+                                               type_aliases=self.config.autodoc_type_aliases)
+                 if signature.return_annotation is not Parameter.empty:
+                     objrepr = stringify_typehint(signature.return_annotation)
+diff --git a/sphinx/ext/autodoc/importer.py b/sphinx/ext/autodoc/importer.py
+index 1a8ea0973..2ae4860e5 100644
+--- a/sphinx/ext/autodoc/importer.py
++++ b/sphinx/ext/autodoc/importer.py
+@@ -275,6 +275,13 @@ def get_class_members(subject: Any, objpath: List[str], attrgetter: Callable
+     for name in dir(subject):
+         try:
+             value = attrgetter(subject, name)
++            if isclass(subject):
++                for cls in getmro(subject):
++                    if name in cls.__dict__:
++                        raw = cls.__dict__[name]
++                        if isinstance(raw, classmethod) and isinstance(getattr(raw, '__func__', None), property):
++                            value = raw
++                            break
+             if ismock(value):
+                 value = undecorate(value)
+ 
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index 23dd9e930..34bc59387 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -390,7 +390,15 @@ def isproperty(obj: Any) -> bool:
+         if isinstance(obj, cached_property):
+             return True
+ 
+-    return isinstance(obj, property)
++    if isinstance(obj, property):
++        return True
++
++    if isinstance(obj, classmethod):
++        func = getattr(obj, '__func__', None)
++        if isinstance(func, property):
++            return True
++
++    return False
+ 
+ 
+ def isgenericalias(obj: Any) -> bool:
+@@ -838,6 +846,10 @@ def getdoc(obj: Any, attrgetter: Callable = safe_getattr,
+     * inherited decorated methods
+     """
+     doc = attrgetter(obj, '__doc__', None)
++    if isinstance(obj, classmethod) and hasattr(obj, '__func__'):
++        func_doc = attrgetter(obj.__func__, '__doc__', None)
++        if func_doc is not None and func_doc != getattr(classmethod, '__doc__', None):
++            doc = func_doc
+     if ispartial(obj) and doc == obj.__class__.__doc__:
+         return getdoc(obj.func)
+     elif doc is None and allow_inherited:

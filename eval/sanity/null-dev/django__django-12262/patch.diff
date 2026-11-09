@@ -1,0 +1,7 @@
+diff --git a/SANITY_NULL_PATCH.txt b/SANITY_NULL_PATCH.txt
+new file mode 100644
+index 0000000..d00491f
+--- /dev/null
++++ b/SANITY_NULL_PATCH.txt
+@@ -0,0 +1 @@
++1

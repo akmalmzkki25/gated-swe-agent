@@ -1,0 +1,190 @@
+2026-11-08 12:32:05,519 - INFO - Creating container for django__django-12209...
+2026-11-08 12:32:05,612 - INFO - Container for django__django-12209 created: f094db9ac36d474cafbcb7785c71df9bd75711a0319495331ad4e1f88bd4ebd8
+2026-11-08 12:32:05,779 - INFO - Container for django__django-12209 started: f094db9ac36d474cafbcb7785c71df9bd75711a0319495331ad4e1f88bd4ebd8
+2026-11-08 12:32:05,783 - INFO - Intermediate patch for django__django-12209 written to logs/run_evaluation/baseline-eval-seed0/gemini__gemini-3.5-flash-lite/django__django-12209/patch.diff, now applying to container...
+2026-11-08 12:32:05,914 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/base.py...
+Applied patch django/db/models/base.py cleanly.
+
+2026-11-08 12:32:06,544 - INFO - Git diff before:
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..1f9de32b78 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -403,6 +403,11 @@ class ModelState:
+ 
+ class Model(metaclass=ModelBase):
+ 
++    def __setattr__(self, name, value):
++        if self._meta.pk and name in (self._meta.pk.name, self._meta.pk.attname):
++            self._state.pk_is_default_generated = False
++        super().__setattr__(name, value)
++
+     def __init__(self, *args, **kwargs):
+         # Alias some things as locals to avoid repeat global lookups
+         cls = self.__class__
+@@ -414,6 +419,7 @@ class Model(metaclass=ModelBase):
+ 
+         # Set up the storage for instance state
+         self._state = ModelState()
++        self._state.pk_is_default_generated = False
+ 
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+@@ -433,6 +439,8 @@ class Model(metaclass=ModelBase):
+                 if val is _DEFERRED:
+                     continue
+                 _setattr(self, field.attname, val)
++                if field == opts.pk:
++                    self._state.pk_is_default_generated = False
+         else:
+             # Slower, kwargs-ready version.
+             fields_iter = iter(opts.fields)
+@@ -441,12 +449,15 @@ class Model(metaclass=ModelBase):
+                     continue
+                 _setattr(self, field.attname, val)
+                 kwargs.pop(field.name, None)
++                if field == opts.pk:
++                    self._state.pk_is_default_generated = False
+ 
+         # Now we're left with the unprocessed fields that *must* come from
+         # keywords, or default.
+ 
+         for field in fields_iter:
+             is_related_object = False
++            is_default = False
+             # Virtual field
+             if field.attname not in kwargs and field.column is None:
+                 continue
+@@ -462,6 +473,7 @@ class Model(metaclass=ModelBase):
+                             val = kwargs.pop(field.attname)
+                         except KeyError:
+                             val = field.get_default()
++                            is_default = True
+                 else:
+                     try:
+                         val = kwargs.pop(field.attname)
+@@ -471,8 +483,10 @@ class Model(metaclass=ModelBase):
+                         # get_default() to be evaluated, and then not used.
+                         # Refs #12057.
+                         val = field.get_default()
++                        is_default = True
+             else:
+                 val = field.get_default()
++                is_default = True
+ 
+             if is_related_object:
+                 # If we are passed a related instance, set it using the
+@@ -484,6 +498,8 @@ class Model(metaclass=ModelBase):
+             else:
+                 if val is not _DEFERRED:
+                     _setattr(self, field.attname, val)
++                    if field == opts.pk:
++                        self._state.pk_is_default_generated = is_default
+ 
+         if kwargs:
+             property_names = opts._property_names
+@@ -851,6 +867,7 @@ class Model(metaclass=ModelBase):
+         if (
+             not force_insert and
+             self._state.adding and
++            getattr(self._state, "pk_is_default_generated", False) and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):
+2026-11-08 12:32:06,548 - INFO - Eval script for django__django-12209 written to logs/run_evaluation/baseline-eval-seed0/gemini__gemini-3.5-flash-lite/django__django-12209/eval.sh; copying to container...
+2026-11-08 12:32:11,865 - INFO - Test runtime: 5.23 seconds
+2026-11-08 12:32:11,868 - INFO - Test output for django__django-12209 written to logs/run_evaluation/baseline-eval-seed0/gemini__gemini-3.5-flash-lite/django__django-12209/test_output.txt
+2026-11-08 12:32:11,921 - INFO - Git diff after:
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..1f9de32b78 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -403,6 +403,11 @@ class ModelState:
+ 
+ class Model(metaclass=ModelBase):
+ 
++    def __setattr__(self, name, value):
++        if self._meta.pk and name in (self._meta.pk.name, self._meta.pk.attname):
++            self._state.pk_is_default_generated = False
++        super().__setattr__(name, value)
++
+     def __init__(self, *args, **kwargs):
+         # Alias some things as locals to avoid repeat global lookups
+         cls = self.__class__
+@@ -414,6 +419,7 @@ class Model(metaclass=ModelBase):
+ 
+         # Set up the storage for instance state
+         self._state = ModelState()
++        self._state.pk_is_default_generated = False
+ 
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+@@ -433,6 +439,8 @@ class Model(metaclass=ModelBase):
+                 if val is _DEFERRED:
+                     continue
+                 _setattr(self, field.attname, val)
++                if field == opts.pk:
++                    self._state.pk_is_default_generated = False
+         else:
+             # Slower, kwargs-ready version.
+             fields_iter = iter(opts.fields)
+@@ -441,12 +449,15 @@ class Model(metaclass=ModelBase):
+                     continue
+                 _setattr(self, field.attname, val)
+                 kwargs.pop(field.name, None)
++                if field == opts.pk:
++                    self._state.pk_is_default_generated = False
+ 
+         # Now we're left with the unprocessed fields that *must* come from
+         # keywords, or default.
+ 
+         for field in fields_iter:
+             is_related_object = False
++            is_default = False
+             # Virtual field
+             if field.attname not in kwargs and field.column is None:
+                 continue
+@@ -462,6 +473,7 @@ class Model(metaclass=ModelBase):
+                             val = kwargs.pop(field.attname)
+                         except KeyError:
+                             val = field.get_default()
++                            is_default = True
+                 else:
+                     try:
+                         val = kwargs.pop(field.attname)
+@@ -471,8 +483,10 @@ class Model(metaclass=ModelBase):
+                         # get_default() to be evaluated, and then not used.
+                         # Refs #12057.
+                         val = field.get_default()
++                        is_default = True
+             else:
+                 val = field.get_default()
++                is_default = True
+ 
+             if is_related_object:
+                 # If we are passed a related instance, set it using the
+@@ -484,6 +498,8 @@ class Model(metaclass=ModelBase):
+             else:
+                 if val is not _DEFERRED:
+                     _setattr(self, field.attname, val)
++                    if field == opts.pk:
++                        self._state.pk_is_default_generated = is_default
+ 
+         if kwargs:
+             property_names = opts._property_names
+@@ -851,6 +867,7 @@ class Model(metaclass=ModelBase):
+         if (
+             not force_insert and
+             self._state.adding and
++            getattr(self._state, "pk_is_default_generated", False) and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):
+2026-11-08 12:32:11,921 - INFO - Grading answer for django__django-12209...
+2026-11-08 12:32:11,925 - INFO - report: {'django__django-12209': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['partial(func, *args, **keywords) - new function with partial application'], 'failure': []}, 'PASS_TO_PASS': {'success': [], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-12209: resolved: True
+2026-11-08 12:32:11,929 - INFO - Attempting to stop container sweb.eval.django__django-12209.baseline-eval-seed0...
+2026-11-08 12:32:27,305 - INFO - Container sweb.eval.django__django-12209.baseline-eval-seed0 stopped successfully.
+2026-11-08 12:32:27,306 - INFO - Attempting to remove container sweb.eval.django__django-12209.baseline-eval-seed0...
+2026-11-08 12:32:27,360 - INFO - Container sweb.eval.django__django-12209.baseline-eval-seed0 removed successfully.

@@ -1,0 +1,282 @@
+{
+  "source": {
+    "verified": [
+      "SWE-bench/SWE-bench_Verified",
+      "78f471bf655a3137b2e8a75af1501690ec009ec3"
+    ],
+    "mini": [
+      "MariusHobbhahn/swe-bench-verified-mini",
+      "b316c349947c29963fce3f4a65967c9807a4b673"
+    ]
+  },
+  "rule": {
+    "eval": {
+      "anchors": [
+        "astropy__astropy-12907",
+        "django__django-11790",
+        "django__django-11848"
+      ],
+      "seed": 42,
+      "cells": [
+        {
+          "difficulty": "<15 min fix",
+          "repo": "sphinx-doc/sphinx",
+          "k": 2
+        },
+        {
+          "difficulty": "<15 min fix",
+          "repo": "django/django",
+          "k": 1
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "repo": "sphinx-doc/sphinx",
+          "k": 1
+        },
+        {
+          "difficulty": "1-4 hours",
+          "repo": "django/django",
+          "k": 1
+        }
+      ]
+    },
+    "dev": {
+      "seed": 7,
+      "cells": [
+        {
+          "difficulty": "<15 min fix",
+          "repo": "django/django",
+          "k": 1
+        },
+        {
+          "difficulty": "<15 min fix",
+          "repo": "sphinx-doc/sphinx",
+          "k": 1
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "repo": "django/django",
+          "k": 1
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "repo": "sphinx-doc/sphinx",
+          "k": 1
+        }
+      ],
+      "excludes": "eval"
+    },
+    "dev_hard": {
+      "seed": 11,
+      "cells": [
+        {
+          "difficulty": "1-4 hours",
+          "repo": "django/django",
+          "k": 2
+        },
+        {
+          "difficulty": "1-4 hours",
+          "repo": "sphinx-doc/sphinx",
+          "k": 2
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "repo": "django/django",
+          "k": 2
+        },
+        {
+          "difficulty": "15 min - 1 hour",
+          "repo": "sphinx-doc/sphinx",
+          "k": 2
+        }
+      ],
+      "excludes": "eval, dev"
+    }
+  },
+  "eval": [
+    {
+      "instance_id": "astropy__astropy-12907",
+      "repo": "astropy/astropy",
+      "difficulty": "15 min - 1 hour",
+      "in_mini": false,
+      "image": "swebench/sweb.eval.x86_64.astropy_1776_astropy-12907:latest",
+      "n_fail_to_pass": 2,
+      "n_pass_to_pass": 13
+    },
+    {
+      "instance_id": "django__django-11790",
+      "repo": "django/django",
+      "difficulty": "15 min - 1 hour",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.django_1776_django-11790:latest",
+      "n_fail_to_pass": 2,
+      "n_pass_to_pass": 77
+    },
+    {
+      "instance_id": "django__django-11848",
+      "repo": "django/django",
+      "difficulty": "15 min - 1 hour",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.django_1776_django-11848:latest",
+      "n_fail_to_pass": 2,
+      "n_pass_to_pass": 43
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-10435",
+      "repo": "sphinx-doc/sphinx",
+      "difficulty": "<15 min fix",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-10435:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 74
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-10323",
+      "repo": "sphinx-doc/sphinx",
+      "difficulty": "<15 min fix",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-10323:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 40
+    },
+    {
+      "instance_id": "django__django-12209",
+      "repo": "django/django",
+      "difficulty": "<15 min fix",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.django_1776_django-12209:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 0
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-7757",
+      "repo": "sphinx-doc/sphinx",
+      "difficulty": "15 min - 1 hour",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7757:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 33
+    },
+    {
+      "instance_id": "django__django-11885",
+      "repo": "django/django",
+      "difficulty": "1-4 hours",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.django_1776_django-11885:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 43
+    }
+  ],
+  "dev": [
+    {
+      "instance_id": "django__django-12304",
+      "repo": "django/django",
+      "difficulty": "<15 min fix",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.django_1776_django-12304:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 17
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8721",
+      "repo": "sphinx-doc/sphinx",
+      "difficulty": "<15 min fix",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8721:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 3
+    },
+    {
+      "instance_id": "django__django-12262",
+      "repo": "django/django",
+      "difficulty": "15 min - 1 hour",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.django_1776_django-12262:latest",
+      "n_fail_to_pass": 4,
+      "n_pass_to_pass": 18
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-10466",
+      "repo": "sphinx-doc/sphinx",
+      "difficulty": "15 min - 1 hour",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-10466:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 6
+    }
+  ],
+  "dev_hard": [
+    {
+      "instance_id": "django__django-12708",
+      "repo": "django/django",
+      "difficulty": "1-4 hours",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.django_1776_django-12708:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 101
+    },
+    {
+      "instance_id": "django__django-12325",
+      "repo": "django/django",
+      "difficulty": "1-4 hours",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.django_1776_django-12325:latest",
+      "n_fail_to_pass": 2,
+      "n_pass_to_pass": 201
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-9461",
+      "repo": "sphinx-doc/sphinx",
+      "difficulty": "1-4 hours",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-9461:latest",
+      "n_fail_to_pass": 3,
+      "n_pass_to_pass": 59
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-9229",
+      "repo": "sphinx-doc/sphinx",
+      "difficulty": "1-4 hours",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-9229:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 13
+    },
+    {
+      "instance_id": "django__django-12774",
+      "repo": "django/django",
+      "difficulty": "15 min - 1 hour",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.django_1776_django-12774:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 41
+    },
+    {
+      "instance_id": "django__django-12050",
+      "repo": "django/django",
+      "difficulty": "15 min - 1 hour",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.django_1776_django-12050:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 10
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-7985",
+      "repo": "sphinx-doc/sphinx",
+      "difficulty": "15 min - 1 hour",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7985:latest",
+      "n_fail_to_pass": 2,
+      "n_pass_to_pass": 3
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8551",
+      "repo": "sphinx-doc/sphinx",
+      "difficulty": "15 min - 1 hour",
+      "in_mini": true,
+      "image": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8551:latest",
+      "n_fail_to_pass": 1,
+      "n_pass_to_pass": 32
+    }
+  ]
+}

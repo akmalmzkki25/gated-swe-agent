@@ -1,0 +1,150 @@
+2026-11-08 14:30:06,533 - INFO - Creating container for sphinx-doc__sphinx-7985...
+2026-11-08 14:30:06,661 - INFO - Container for sphinx-doc__sphinx-7985 created: bbaa9947c82682a64d0492f778e2dde084f89e63f5f3f24584767b3c25186807
+2026-11-08 14:30:06,857 - INFO - Container for sphinx-doc__sphinx-7985 started: bbaa9947c82682a64d0492f778e2dde084f89e63f5f3f24584767b3c25186807
+2026-11-08 14:30:06,882 - INFO - Intermediate patch for sphinx-doc__sphinx-7985 written to logs/run_evaluation/baseline-dev_hard-seed0/gemini__gemini-3.5-flash-lite/sphinx-doc__sphinx-7985/patch.diff, now applying to container...
+2026-11-08 14:30:07,088 - INFO - >>>>> Applied Patch:
+Checking patch sphinx/builders/linkcheck.py...
+Applied patch sphinx/builders/linkcheck.py cleanly.
+
+2026-11-08 14:30:07,294 - INFO - Git diff before:
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index dd5317087..7502f4fcf 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -75,6 +75,23 @@ def check_anchor(response: requests.requests.Response, anchor: str) -> bool:
+     return parser.found
+ 
+ 
++def check_local_anchor(filename: str, anchor: str) -> bool:
++    parser = AnchorCheckParser(anchor)
++    try:
++        with open(filename, "r", encoding="utf-8", errors="ignore") as f:
++            while True:
++                chunk = f.read(4096)
++                if not chunk:
++                    break
++                parser.feed(chunk)
++                if parser.found:
++                    break
++    except Exception:
++        pass
++    parser.close()
++    return parser.found
++
++
+ class CheckExternalLinksBuilder(Builder):
+     """
+     Checks for broken external links.
+@@ -213,7 +230,35 @@ class CheckExternalLinksBuilder(Builder):
+             if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+                 return 'unchecked', '', 0
+             elif not uri.startswith(('http:', 'https:')):
+-                return 'local', '', 0
++                if '#' in uri:
++                    req_url, anchor = uri.split('#', 1)
++                else:
++                    req_url = uri
++                    anchor = None
++
++                if req_url:
++                    if req_url.startswith('/'):
++                        filename = path.join(self.app.srcdir, req_url[1:])
++                    else:
++                        filename = path.join(path.dirname(self.env.doc2path(docname)), req_url)
++
++                    if path.exists(filename):
++                        pass
++                    else:
++                        for suffix in self.config.source_suffix:
++                            if path.exists(filename + suffix):
++                                filename = filename + suffix
++                                break
++                        else:
++                            return 'broken', __("Local file not found: %s") % req_url, 0
++                else:
++                    filename = self.env.doc2path(docname)
++
++                if anchor and self.app.config.linkcheck_anchors:
++                    if not check_local_anchor(filename, unquote(anchor)):
++                        return 'broken', __("Anchor '%s' not found") % anchor, 0
++
++                return 'working', '', 0
+             elif uri in self.good:
+                 return 'working', 'old', 0
+             elif uri in self.broken:
+2026-11-08 14:30:07,298 - INFO - Eval script for sphinx-doc__sphinx-7985 written to logs/run_evaluation/baseline-dev_hard-seed0/gemini__gemini-3.5-flash-lite/sphinx-doc__sphinx-7985/eval.sh; copying to container...
+2026-11-08 14:30:13,340 - INFO - Test runtime: 5.96 seconds
+2026-11-08 14:30:13,346 - INFO - Test output for sphinx-doc__sphinx-7985 written to logs/run_evaluation/baseline-dev_hard-seed0/gemini__gemini-3.5-flash-lite/sphinx-doc__sphinx-7985/test_output.txt
+2026-11-08 14:30:13,431 - INFO - Git diff after:
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index dd5317087..7502f4fcf 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -75,6 +75,23 @@ def check_anchor(response: requests.requests.Response, anchor: str) -> bool:
+     return parser.found
+ 
+ 
++def check_local_anchor(filename: str, anchor: str) -> bool:
++    parser = AnchorCheckParser(anchor)
++    try:
++        with open(filename, "r", encoding="utf-8", errors="ignore") as f:
++            while True:
++                chunk = f.read(4096)
++                if not chunk:
++                    break
++                parser.feed(chunk)
++                if parser.found:
++                    break
++    except Exception:
++        pass
++    parser.close()
++    return parser.found
++
++
+ class CheckExternalLinksBuilder(Builder):
+     """
+     Checks for broken external links.
+@@ -213,7 +230,35 @@ class CheckExternalLinksBuilder(Builder):
+             if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+                 return 'unchecked', '', 0
+             elif not uri.startswith(('http:', 'https:')):
+-                return 'local', '', 0
++                if '#' in uri:
++                    req_url, anchor = uri.split('#', 1)
++                else:
++                    req_url = uri
++                    anchor = None
++
++                if req_url:
++                    if req_url.startswith('/'):
++                        filename = path.join(self.app.srcdir, req_url[1:])
++                    else:
++                        filename = path.join(path.dirname(self.env.doc2path(docname)), req_url)
++
++                    if path.exists(filename):
++                        pass
++                    else:
++                        for suffix in self.config.source_suffix:
++                            if path.exists(filename + suffix):
++                                filename = filename + suffix
++                                break
++                        else:
++                            return 'broken', __("Local file not found: %s") % req_url, 0
++                else:
++                    filename = self.env.doc2path(docname)
++
++                if anchor and self.app.config.linkcheck_anchors:
++                    if not check_local_anchor(filename, unquote(anchor)):
++                        return 'broken', __("Anchor '%s' not found") % anchor, 0
++
++                return 'working', '', 0
+             elif uri in self.good:
+                 return 'working', 'old', 0
+             elif uri in self.broken:
+2026-11-08 14:30:13,431 - INFO - Grading answer for sphinx-doc__sphinx-7985...
+2026-11-08 14:30:13,440 - INFO - report: {'sphinx-doc__sphinx-7985': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['tests/test_build_linkcheck.py::test_defaults'], 'failure': ['tests/test_build_linkcheck.py::test_anchors_ignored']}, 'PASS_TO_PASS': {'success': ['tests/test_build_linkcheck.py::test_defaults_json', 'tests/test_build_linkcheck.py::test_auth', 'tests/test_build_linkcheck.py::test_linkcheck_request_headers'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sphinx-doc__sphinx-7985: resolved: False
+2026-11-08 14:30:13,445 - INFO - Attempting to stop container sweb.eval.sphinx-doc__sphinx-7985.baseline-dev_hard-seed0...
+2026-11-08 14:30:28,836 - INFO - Container sweb.eval.sphinx-doc__sphinx-7985.baseline-dev_hard-seed0 stopped successfully.
+2026-11-08 14:30:28,841 - INFO - Attempting to remove container sweb.eval.sphinx-doc__sphinx-7985.baseline-dev_hard-seed0...
+2026-11-08 14:30:28,937 - INFO - Container sweb.eval.sphinx-doc__sphinx-7985.baseline-dev_hard-seed0 removed successfully.

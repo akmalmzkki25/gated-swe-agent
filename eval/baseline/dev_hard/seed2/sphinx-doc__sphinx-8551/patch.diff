@@ -1,0 +1,23 @@
+diff --git a/sphinx/domains/python.py b/sphinx/domains/python.py
+index 79d7e4f46..66008b4e1 100644
+--- a/sphinx/domains/python.py
++++ b/sphinx/domains/python.py
+@@ -269,9 +269,15 @@ class PyXrefMixin:
+     def make_xref(self, rolename: str, domain: str, target: str,
+                   innernode: "Type[TextlikeNode]" = nodes.emphasis,
+                   contnode: Node = None, env: BuildEnvironment = None) -> Node:
+-        result = super().make_xref(rolename, domain, target,  # type: ignore
+-                                   innernode, contnode, env)
+-        result['refspecific'] = True
++        if target.startswith('.'):
++            reftarget = target[1:]
++            result = super().make_xref(rolename, domain, reftarget,
++                                       innernode, contnode, env)
++            result['refspecific'] = True
++        else:
++            result = super().make_xref(rolename, domain, target,
++                                       innernode, contnode, env)
++
+         if target.startswith(('.', '~')):
+             prefix, result['reftarget'] = target[0], target[1:]
+             if prefix == '.':

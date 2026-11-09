@@ -1,0 +1,44 @@
+2026-11-08 15:19:12,988 - INFO - Creating container for django__django-12304...
+2026-11-08 15:19:13,105 - INFO - Container for django__django-12304 created: b2bb5ccac3b5deda5beccf4311769b27db9dca115231cb5f60ba2e096027f7a1
+2026-11-08 15:19:13,459 - INFO - Container for django__django-12304 started: b2bb5ccac3b5deda5beccf4311769b27db9dca115231cb5f60ba2e096027f7a1
+2026-11-08 15:19:13,464 - INFO - Intermediate patch for django__django-12304 written to logs/run_evaluation/agent-dev-seed2/gated-agent/django__django-12304/patch.diff, now applying to container...
+2026-11-08 15:19:13,638 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/enums.py...
+Applied patch django/db/models/enums.py cleanly.
+
+2026-11-08 15:19:14,557 - INFO - Git diff before:
+diff --git a/django/db/models/enums.py b/django/db/models/enums.py
+index f48143ddaf..51821a2b45 100644
+--- a/django/db/models/enums.py
++++ b/django/db/models/enums.py
+@@ -31,6 +31,7 @@ class ChoicesMeta(enum.EnumMeta):
+         # that is passed in as "self" as the value to use when looking up the
+         # label in the choices.
+         cls.label = property(lambda self: cls._value2label_map_.get(self.value))
++        cls.do_not_call_in_templates = True
+         return enum.unique(cls)
+ 
+     def __contains__(cls, member):
+2026-11-08 15:19:14,561 - INFO - Eval script for django__django-12304 written to logs/run_evaluation/agent-dev-seed2/gated-agent/django__django-12304/eval.sh; copying to container...
+2026-11-08 15:19:20,176 - INFO - Test runtime: 5.51 seconds
+2026-11-08 15:19:20,179 - INFO - Test output for django__django-12304 written to logs/run_evaluation/agent-dev-seed2/gated-agent/django__django-12304/test_output.txt
+2026-11-08 15:19:20,237 - INFO - Git diff after:
+diff --git a/django/db/models/enums.py b/django/db/models/enums.py
+index f48143ddaf..51821a2b45 100644
+--- a/django/db/models/enums.py
++++ b/django/db/models/enums.py
+@@ -31,6 +31,7 @@ class ChoicesMeta(enum.EnumMeta):
+         # that is passed in as "self" as the value to use when looking up the
+         # label in the choices.
+         cls.label = property(lambda self: cls._value2label_map_.get(self.value))
++        cls.do_not_call_in_templates = True
+         return enum.unique(cls)
+ 
+     def __contains__(cls, member):
+2026-11-08 15:19:20,238 - INFO - Grading answer for django__django-12304...
+2026-11-08 15:19:20,248 - INFO - report: {'django__django-12304': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_templates (model_enums.tests.ChoicesTests)'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_integerchoices (model_enums.tests.ChoicesTests)', 'test_integerchoices_auto_label (model_enums.tests.ChoicesTests)', 'test_integerchoices_containment (model_enums.tests.ChoicesTests)', 'test_integerchoices_empty_label (model_enums.tests.ChoicesTests)', 'test_integerchoices_functional_api (model_enums.tests.ChoicesTests)', 'test_invalid_definition (model_enums.tests.ChoicesTests)', 'test_str (model_enums.tests.ChoicesTests)', 'test_textchoices (model_enums.tests.ChoicesTests)', 'test_textchoices_auto_label (model_enums.tests.ChoicesTests)', 'test_textchoices_blank_value (model_enums.tests.ChoicesTests)', 'test_textchoices_containment (model_enums.tests.ChoicesTests)', 'test_textchoices_empty_label (model_enums.tests.ChoicesTests)', 'test_textchoices_functional_api (model_enums.tests.ChoicesTests)', 'test_bool_unsupported (model_enums.tests.CustomChoicesTests)', 'test_labels_valid (model_enums.tests.CustomChoicesTests)', 'test_timezone_unsupported (model_enums.tests.CustomChoicesTests)', 'test_uuid_unsupported (model_enums.tests.CustomChoicesTests)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-12304: resolved: True
+2026-11-08 15:19:20,253 - INFO - Attempting to stop container sweb.eval.django__django-12304.agent-dev-seed2...
+2026-11-08 15:19:35,703 - INFO - Container sweb.eval.django__django-12304.agent-dev-seed2 stopped successfully.
+2026-11-08 15:19:35,705 - INFO - Attempting to remove container sweb.eval.django__django-12304.agent-dev-seed2...
+2026-11-08 15:19:35,794 - INFO - Container sweb.eval.django__django-12304.agent-dev-seed2 removed successfully.

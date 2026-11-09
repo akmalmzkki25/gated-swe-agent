@@ -1,0 +1,7 @@
+{
+  "django__django-12304": {
+    "model_name_or_path": "gemini/gemini-3.5-flash-lite",
+    "instance_id": "django__django-12304",
+    "model_patch": ""
+  }
+}

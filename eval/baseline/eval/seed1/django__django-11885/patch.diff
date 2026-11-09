@@ -1,0 +1,56 @@
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index ae82d26340..d56614ed0a 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -1,4 +1,4 @@
+-from collections import Counter
++from collections import Counter, OrderedDict
+ from itertools import chain
+ from operator import attrgetter
+ 
+@@ -214,19 +214,34 @@ class Collector:
+         if collect_related:
+             if keep_parents:
+                 parents = set(model._meta.get_parent_list())
+-            for related in get_candidate_relations_to_delete(model._meta):
+-                # Preserve parent reverse relationships if keep_parents=True.
+-                if keep_parents and related.model in parents:
+-                    continue
+-                field = related.field
+-                if field.remote_field.on_delete == DO_NOTHING:
+-                    continue
++            candidate_relations = [
++                r for r in get_candidate_relations_to_delete(model._meta)
++                if not (keep_parents and r.model in parents) and r.field.remote_field.on_delete is not DO_NOTHING
++            ]
++            if candidate_relations:
++                # Use batch size of the first relation
++                field = candidate_relations[0].field
+                 batches = self.get_del_batches(new_objs, field)
+                 for batch in batches:
+-                    sub_objs = self.related_objects(related, batch)
+-                    if self.can_fast_delete(sub_objs, from_field=field):
+-                        self.fast_deletes.append(sub_objs)
+-                    else:
++                    fast_deletes_by_model = OrderedDict()
++                    slow_relations = []
++                    for related in candidate_relations:
++                        field = related.field
++                        sub_objs = self.related_objects(related, batch)
++                        if self.can_fast_delete(sub_objs, from_field=field):
++                            related_model = related.related_model
++                            if related_model in fast_deletes_by_model:
++                                fast_deletes_by_model[related_model] = fast_deletes_by_model[related_model] | sub_objs
++                            else:
++                                fast_deletes_by_model[related_model] = sub_objs
++                        else:
++                            slow_relations.append((related, sub_objs))
++
++                    for qs in fast_deletes_by_model.values():
++                        self.fast_deletes.append(qs)
++
++                    for related, sub_objs in slow_relations:
++                        field = related.field
+                         related_model = related.related_model
+                         # Non-referenced fields can be deferred if no signal
+                         # receivers are connected for the related model as

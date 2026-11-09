@@ -1,0 +1,107 @@
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index dd5317087..bf2b778ef 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -212,8 +212,6 @@ class CheckExternalLinksBuilder(Builder):
+             # check for various conditions without bothering the network
+             if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+                 return 'unchecked', '', 0
+-            elif not uri.startswith(('http:', 'https:')):
+-                return 'local', '', 0
+             elif uri in self.good:
+                 return 'working', 'old', 0
+             elif uri in self.broken:
+@@ -224,6 +222,93 @@ class CheckExternalLinksBuilder(Builder):
+                 if rex.match(uri):
+                     return 'ignored', '', 0
+ 
++            if not uri.startswith(('http:', 'https:')):
++                if '#' in uri:
++                    req_url, anchor = uri.split('#', 1)
++                else:
++                    req_url = uri
++                    anchor = None
++
++                if req_url:
++                    if req_url.startswith('/'):
++                        targetpath = path.normpath(path.join(self.app.srcdir, req_url.lstrip('/')))
++                    else:
++                        docdir = path.dirname(self.env.doc2path(docname, None))
++                        targetpath = path.normpath(path.join(docdir, req_url))
++
++                    found = False
++                    target_docname = None
++                    relpath = path.relpath(targetpath, self.app.srcdir)
++                    docname_candidate = relpath.replace(path.sep, '/')
++                    if not docname_candidate.startswith('../') and docname_candidate in self.env.found_docs:
++                        found = True
++                        target_docname = docname_candidate
++                    elif path.exists(targetpath):
++                        found = True
++                        for d in self.env.found_docs:
++                            if path.abspath(self.env.doc2path(d, None)) == path.abspath(targetpath):
++                                target_docname = d
++                                break
++                    else:
++                        for suffix in self.env.config.source_suffix:
++                            if path.exists(targetpath + suffix):
++                                found = True
++                                tentative_path = targetpath + suffix
++                                for d in self.env.found_docs:
++                                    if path.abspath(self.env.doc2path(d, None)) == path.abspath(tentative_path):
++                                        target_docname = d
++                                        break
++                                break
++                        if not found and path.isdir(targetpath):
++                            for suffix in self.env.config.source_suffix:
++                                idx_path = path.join(targetpath, 'index' + suffix)
++                                if path.exists(idx_path):
++                                    found = True
++                                    for d in self.env.found_docs:
++                                        if path.abspath(self.env.doc2path(d, None)) == path.abspath(idx_path):
++                                            target_docname = d
++                                            break
++                                    break
++
++                    if not found:
++                        status = 'broken'
++                        info = __("Local file %r not found") % req_url
++                        code = 0
++                        self.broken[uri] = info
++                        return status, info, code
++                else:
++                    target_docname = docname
++
++                if anchor and target_docname:
++                    try:
++                        doctree = self.env.get_doctree(target_docname)
++                        std_domain = self.env.domains['std']
++                        labels = std_domain.data.get('labels', {})
++                        anonlabels = std_domain.data.get('anonlabels', {})
++                        anchor_found = False
++                        if anchor in doctree.ids:
++                            anchor_found = True
++                        elif anchor in labels and labels[anchor][0] == target_docname:
++                            anchor_found = True
++                        elif anchor in anonlabels and anonlabels[anchor][0] == target_docname:
++                            anchor_found = True
++                        else:
++                            for node in doctree.traverse(nodes.Element):
++                                if anchor in node.get('ids', []):
++                                    anchor_found = True
++                                    break
++                        if not anchor_found:
++                            status = 'broken'
++                            info = __("Anchor %r not found") % anchor
++                            code = 0
++                            self.broken[uri] = info
++                            return status, info, code
++                    except Exception:
++                        pass
++
++                self.good.add(uri)
++                return 'working', '', 0
++
+             # need to actually check the URI
+             for _ in range(self.app.config.linkcheck_retries):
+                 status, info, code = check_uri()

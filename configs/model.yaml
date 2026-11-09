@@ -1,0 +1,13 @@
+# Model under test. Both agents read this file; nothing else sets decoding parameters.
+# The values are checked against the live endpoint by `python -m track3.smoke_model`
+# (results in configs/model_smoke.json, run with drop_params off) before any benchmark run.
+model_name: gemini/gemini-3.5-flash-lite   # LiteLLM id; override with MODEL_NAME for another endpoint
+model_kwargs:
+  temperature: 1.0          # Google's default for Gemini 3.x; lower values are reported to cause looping
+  top_p: 0.95
+  max_tokens: 16384         # thinking + answer share this cap
+  reasoning_effort: low     # mapped by LiteLLM to Gemini thinking_level
+  # Kept identical to mini-swe-agent's own swebench.yaml so the baseline's model call is untouched:
+  drop_params: true
+  parallel_tool_calls: true
+# seed is set per run (0, 1, 2) by the runner and passed as model_kwargs.seed

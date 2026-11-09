@@ -1,0 +1,45 @@
+{
+    "total_instances": 4,
+    "submitted_instances": 4,
+    "completed_instances": 4,
+    "resolved_instances": 4,
+    "unresolved_instances": 0,
+    "infra_failure_instances": 0,
+    "ambiguous_failure_instances": 0,
+    "empty_patch_instances": 0,
+    "error_instances": 0,
+    "completed_ids": [
+        "django__django-12262",
+        "django__django-12304",
+        "sphinx-doc__sphinx-10466",
+        "sphinx-doc__sphinx-8721"
+    ],
+    "incomplete_ids": [],
+    "empty_patch_ids": [],
+    "submitted_ids": [
+        "django__django-12262",
+        "django__django-12304",
+        "sphinx-doc__sphinx-10466",
+        "sphinx-doc__sphinx-8721"
+    ],
+    "resolved_ids": [
+        "django__django-12262",
+        "django__django-12304",
+        "sphinx-doc__sphinx-10466",
+        "sphinx-doc__sphinx-8721"
+    ],
+    "unresolved_ids": [],
+    "infra_failure_ids": [],
+    "ambiguous_failure_ids": [],
+    "failure_reasons": {},
+    "error_ids": [],
+    "schema_version": 2,
+    "unstopped_instances": 0,
+    "unstopped_containers": [],
+    "unremoved_images": [
+        "swebench/sweb.eval.x86_64.django_1776_django-12262@sha256:23c0777e08a37bd0643f7638eaca9c57d1ee16fca79b6312b8d6de7fd1b5e7da",
+        "swebench/sweb.eval.x86_64.django_1776_django-12304@sha256:46ad662e0ab1ab9417a26ceae392395f255634a054c25faf0fcfcd43aa52702c",
+        "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-10466@sha256:c02edca2a92a3353e0780dcd1b1a3ba2349245d7aa4e5fc6bc8f2a5327691452",
+        "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8721@sha256:8f02afdb324767a2e56b7940569ea822cfa58c3c1f0ef9a910162d21cf52c3f5"
+    ]
+}

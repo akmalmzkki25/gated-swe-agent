@@ -1,0 +1,46 @@
+2026-11-08 15:45:36,151 - INFO - Creating container for django__django-12050...
+2026-11-08 15:45:36,253 - INFO - Container for django__django-12050 created: 11964f5ebbd58fe3235f84823d3442c4be93e5c019748f70d573532a1a7498cc
+2026-11-08 15:45:36,459 - INFO - Container for django__django-12050 started: 11964f5ebbd58fe3235f84823d3442c4be93e5c019748f70d573532a1a7498cc
+2026-11-08 15:45:36,465 - INFO - Intermediate patch for django__django-12050 written to logs/run_evaluation/agent-dev_hard-seed1/gated-agent/django__django-12050/patch.diff, now applying to container...
+2026-11-08 15:45:36,611 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/sql/query.py...
+Applied patch django/db/models/sql/query.py cleanly.
+
+2026-11-08 15:45:37,311 - INFO - Git diff before:
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+index ea51912e8b..90475d6fb9 100644
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1073,7 +1073,7 @@ class Query(BaseExpression):
+                         ))
+                 else:
+                     resolved_values.append(sub_value)
+-            value = tuple(resolved_values)
++            value = type(value)(resolved_values)
+         return value
+ 
+     def solve_lookup_type(self, lookup):
+2026-11-08 15:45:37,316 - INFO - Eval script for django__django-12050 written to logs/run_evaluation/agent-dev_hard-seed1/gated-agent/django__django-12050/eval.sh; copying to container...
+2026-11-08 15:45:43,632 - INFO - Test runtime: 6.21 seconds
+2026-11-08 15:45:43,638 - INFO - Test output for django__django-12050 written to logs/run_evaluation/agent-dev_hard-seed1/gated-agent/django__django-12050/test_output.txt
+2026-11-08 15:45:43,707 - INFO - Git diff after:
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+index ea51912e8b..90475d6fb9 100644
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1073,7 +1073,7 @@ class Query(BaseExpression):
+                         ))
+                 else:
+                     resolved_values.append(sub_value)
+-            value = tuple(resolved_values)
++            value = type(value)(resolved_values)
+         return value
+ 
+     def solve_lookup_type(self, lookup):
+2026-11-08 15:45:43,708 - INFO - Grading answer for django__django-12050...
+2026-11-08 15:45:43,713 - INFO - report: {'django__django-12050': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_iterable_lookup_value (queries.test_query.TestQuery)'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_clone_select_related (queries.test_query.TestQuery)', 'test_complex_query (queries.test_query.TestQuery)', 'test_foreign_key (queries.test_query.TestQuery)', 'test_foreign_key_exclusive (queries.test_query.TestQuery)', 'test_foreign_key_f (queries.test_query.TestQuery)', 'test_multiple_fields (queries.test_query.TestQuery)', 'test_negated_nullable (queries.test_query.TestQuery)', 'test_simple_query (queries.test_query.TestQuery)', 'test_simplecol_query (queries.test_query.TestQuery)', 'test_transform (queries.test_query.TestQuery)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-12050: resolved: True
+2026-11-08 15:45:43,718 - INFO - Attempting to stop container sweb.eval.django__django-12050.agent-dev_hard-seed1...
+2026-11-08 15:45:59,164 - INFO - Container sweb.eval.django__django-12050.agent-dev_hard-seed1 stopped successfully.
+2026-11-08 15:45:59,165 - INFO - Attempting to remove container sweb.eval.django__django-12050.agent-dev_hard-seed1...
+2026-11-08 15:45:59,251 - INFO - Container sweb.eval.django__django-12050.agent-dev_hard-seed1 removed successfully.

@@ -1,0 +1,93 @@
+diff --git a/sphinx/domains/python.py b/sphinx/domains/python.py
+index d79de154e..25e97cf8b 100644
+--- a/sphinx/domains/python.py
++++ b/sphinx/domains/python.py
+@@ -852,6 +852,7 @@ class PyProperty(PyObject):
+     option_spec = PyObject.option_spec.copy()
+     option_spec.update({
+         'abstractmethod': directives.flag,
++        'classmethod': directives.flag,
+         'type': directives.unchanged,
+     })
+ 
+@@ -865,7 +866,10 @@ class PyProperty(PyObject):
+         return fullname, prefix
+ 
+     def get_signature_prefix(self, sig: str) -> str:
+-        prefix = ['property']
++        prefix = []
++        if 'classmethod' in self.options:
++            prefix.append('classmethod')
++        prefix.append('property')
+         if 'abstractmethod' in self.options:
+             prefix.insert(0, 'abstract')
+ 
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 1cecb1f79..48e79b093 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -2673,12 +2673,15 @@ class PropertyDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):  #
+     def add_directive_header(self, sig: str) -> None:
+         super().add_directive_header(sig)
+         sourcename = self.get_sourcename()
+-        if inspect.isabstractmethod(self.object):
++        obj = inspect.unwrap_all(self.object)
++        if inspect.isabstractmethod(obj) or inspect.isabstractmethod(self.object):
+             self.add_line('   :abstractmethod:', sourcename)
++        if inspect.isclassmethod(self.object):
++            self.add_line('   :classmethod:', sourcename)
+ 
+-        if safe_getattr(self.object, 'fget', None) and self.config.autodoc_typehints != 'none':
++        if safe_getattr(obj, 'fget', None) and self.config.autodoc_typehints != 'none':
+             try:
+-                signature = inspect.signature(self.object.fget,
++                signature = inspect.signature(obj.fget,
+                                               type_aliases=self.config.autodoc_type_aliases)
+                 if signature.return_annotation is not Parameter.empty:
+                     objrepr = stringify_typehint(signature.return_annotation)
+diff --git a/sphinx/ext/autodoc/importer.py b/sphinx/ext/autodoc/importer.py
+index 1a8ea0973..be88edbd4 100644
+--- a/sphinx/ext/autodoc/importer.py
++++ b/sphinx/ext/autodoc/importer.py
+@@ -17,8 +17,8 @@ from sphinx.deprecation import RemovedInSphinx50Warning
+ from sphinx.ext.autodoc.mock import ismock, undecorate
+ from sphinx.pycode import ModuleAnalyzer, PycodeError
+ from sphinx.util import logging
+-from sphinx.util.inspect import (getannotations, getmro, getslots, isclass, isenumclass,
+-                                 safe_getattr)
++from sphinx.util.inspect import (getannotations, getmro, getslots, isclass, isclassmethod,
++                                 isenumclass, isproperty, safe_getattr, unwrap_all)
+ 
+ if False:
+     # For type annotation
+@@ -274,7 +274,16 @@ def get_class_members(subject: Any, objpath: List[str], attrgetter: Callable
+     # other members
+     for name in dir(subject):
+         try:
+-            value = attrgetter(subject, name)
++            value = None
++            for basecls in getmro(subject):
++                if name in basecls.__dict__:
++                    raw_val = basecls.__dict__[name]
++                    if isproperty(raw_val) or (isclassmethod(raw_val) and isproperty(unwrap_all(raw_val))):
++                        value = raw_val
++                        break
++            if value is None:
++                value = attrgetter(subject, name)
++
+             if ismock(value):
+                 value = undecorate(value)
+ 
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index 23dd9e930..b5de303d9 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -390,7 +390,7 @@ def isproperty(obj: Any) -> bool:
+         if isinstance(obj, cached_property):
+             return True
+ 
+-    return isinstance(obj, property)
++    return isinstance(unwrap_all(obj), property)
+ 
+ 
+ def isgenericalias(obj: Any) -> bool:

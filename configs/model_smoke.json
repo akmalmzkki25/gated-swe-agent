@@ -1,0 +1,235 @@
+{
+  "model_name": "gemini/gemini-3.5-flash-lite",
+  "pinned_kwargs": {
+    "temperature": 1.0,
+    "top_p": 0.95,
+    "max_tokens": 16384,
+    "reasoning_effort": "low",
+    "drop_params": false,
+    "parallel_tool_calls": true
+  },
+  "pinned_with_seed_0": {
+    "ok": true,
+    "text": "pong",
+    "response_model": "gemini-3.5-flash-lite",
+    "model_version": "gemini-3.5-flash-lite",
+    "reasoning_tokens": 46,
+    "usage": {
+      "completion_tokens": 47,
+      "prompt_tokens": 8,
+      "total_tokens": 55,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 46,
+        "rejected_prediction_tokens": null,
+        "text_tokens": 1,
+        "image_tokens": null,
+        "video_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cached_tokens": null,
+        "image_tokens": null,
+        "text_tokens": 8,
+        "video_tokens": null,
+        "initial_prompt_tokens": null
+      },
+      "cache_read_input_tokens": null,
+      "cache_creation_input_tokens": null
+    },
+    "cost_usd": 0.00011990000000000001
+  },
+  "pinned_with_seed_0_again": {
+    "ok": true,
+    "text": "pong",
+    "response_model": "gemini-3.5-flash-lite",
+    "model_version": "gemini-3.5-flash-lite",
+    "reasoning_tokens": 46,
+    "usage": {
+      "completion_tokens": 47,
+      "prompt_tokens": 8,
+      "total_tokens": 55,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 46,
+        "rejected_prediction_tokens": null,
+        "text_tokens": 1,
+        "image_tokens": null,
+        "video_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cached_tokens": null,
+        "image_tokens": null,
+        "text_tokens": 8,
+        "video_tokens": null,
+        "initial_prompt_tokens": null
+      },
+      "cache_read_input_tokens": null,
+      "cache_creation_input_tokens": null
+    },
+    "cost_usd": 0.00011990000000000001
+  },
+  "pinned_with_seed_1": {
+    "ok": true,
+    "text": "pong",
+    "response_model": "gemini-3.5-flash-lite",
+    "model_version": "gemini-3.5-flash-lite",
+    "reasoning_tokens": 76,
+    "usage": {
+      "completion_tokens": 77,
+      "prompt_tokens": 8,
+      "total_tokens": 85,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 76,
+        "rejected_prediction_tokens": null,
+        "text_tokens": 1,
+        "image_tokens": null,
+        "video_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cached_tokens": null,
+        "image_tokens": null,
+        "text_tokens": 8,
+        "video_tokens": null,
+        "initial_prompt_tokens": null
+      },
+      "cache_read_input_tokens": null,
+      "cache_creation_input_tokens": null
+    },
+    "cost_usd": 0.00019490000000000002
+  },
+  "without_temperature": {
+    "ok": true,
+    "text": "pong",
+    "response_model": "gemini-3.5-flash-lite",
+    "model_version": "gemini-3.5-flash-lite",
+    "reasoning_tokens": 74,
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 8,
+      "total_tokens": 83,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 74,
+        "rejected_prediction_tokens": null,
+        "text_tokens": 1,
+        "image_tokens": null,
+        "video_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cached_tokens": null,
+        "image_tokens": null,
+        "text_tokens": 8,
+        "video_tokens": null,
+        "initial_prompt_tokens": null
+      },
+      "cache_read_input_tokens": null,
+      "cache_creation_input_tokens": null
+    },
+    "cost_usd": 0.00018990000000000004
+  },
+  "without_top_p": {
+    "ok": true,
+    "text": "pong",
+    "response_model": "gemini-3.5-flash-lite",
+    "model_version": "gemini-3.5-flash-lite",
+    "reasoning_tokens": 66,
+    "usage": {
+      "completion_tokens": 67,
+      "prompt_tokens": 8,
+      "total_tokens": 75,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 66,
+        "rejected_prediction_tokens": null,
+        "text_tokens": 1,
+        "image_tokens": null,
+        "video_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cached_tokens": null,
+        "image_tokens": null,
+        "text_tokens": 8,
+        "video_tokens": null,
+        "initial_prompt_tokens": null
+      },
+      "cache_read_input_tokens": null,
+      "cache_creation_input_tokens": null
+    },
+    "cost_usd": 0.00016990000000000004
+  },
+  "without_reasoning_effort": {
+    "ok": true,
+    "text": "pong",
+    "response_model": "gemini-3.5-flash-lite",
+    "model_version": "gemini-3.5-flash-lite",
+    "reasoning_tokens": null,
+    "usage": {
+      "completion_tokens": 1,
+      "prompt_tokens": 8,
+      "total_tokens": 9,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": null,
+        "rejected_prediction_tokens": null,
+        "text_tokens": 1,
+        "image_tokens": null,
+        "video_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cached_tokens": null,
+        "image_tokens": null,
+        "text_tokens": 8,
+        "video_tokens": null,
+        "initial_prompt_tokens": null
+      },
+      "cache_read_input_tokens": null,
+      "cache_creation_input_tokens": null
+    },
+    "cost_usd": 4.9000000000000005e-06
+  },
+  "without_seed": {
+    "ok": true,
+    "text": "pong",
+    "response_model": "gemini-3.5-flash-lite",
+    "model_version": "gemini-3.5-flash-lite",
+    "reasoning_tokens": 40,
+    "usage": {
+      "completion_tokens": 41,
+      "prompt_tokens": 8,
+      "total_tokens": 49,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 40,
+        "rejected_prediction_tokens": null,
+        "text_tokens": 1,
+        "image_tokens": null,
+        "video_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": null,
+        "cached_tokens": null,
+        "image_tokens": null,
+        "text_tokens": 8,
+        "video_tokens": null,
+        "initial_prompt_tokens": null
+      },
+      "cache_read_input_tokens": null,
+      "cache_creation_input_tokens": null
+    },
+    "cost_usd": 0.00010490000000000002
+  }
+}

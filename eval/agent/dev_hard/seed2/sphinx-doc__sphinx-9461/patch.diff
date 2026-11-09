@@ -1,0 +1,75 @@
+diff --git a/sphinx/domains/python.py b/sphinx/domains/python.py
+index d79de154e..1d712110e 100644
+--- a/sphinx/domains/python.py
++++ b/sphinx/domains/python.py
+@@ -852,6 +852,7 @@ class PyProperty(PyObject):
+     option_spec = PyObject.option_spec.copy()
+     option_spec.update({
+         'abstractmethod': directives.flag,
++        'classmethod': directives.flag,
+         'type': directives.unchanged,
+     })
+ 
+@@ -866,6 +867,8 @@ class PyProperty(PyObject):
+ 
+     def get_signature_prefix(self, sig: str) -> str:
+         prefix = ['property']
++        if 'classmethod' in self.options:
++            prefix.insert(0, 'classmethod')
+         if 'abstractmethod' in self.options:
+             prefix.insert(0, 'abstract')
+ 
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 1cecb1f79..ec2e4d7e0 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -2663,6 +2663,17 @@ class PropertyDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):  #
+                             ) -> bool:
+         return inspect.isproperty(member) and isinstance(parent, ClassDocumenter)
+ 
++    def import_object(self, raiseerror: bool = False) -> bool:
++        ret = super().import_object(raiseerror)
++        if not ret:
++            return ret
++
++        obj = self.parent.__dict__.get(self.object_name)
++        if obj is None:
++            obj = self.object
++        self.object = obj
++        return ret
++
+     def document_members(self, all_members: bool = False) -> None:
+         pass
+ 
+@@ -2673,12 +2684,16 @@ class PropertyDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):  #
+     def add_directive_header(self, sig: str) -> None:
+         super().add_directive_header(sig)
+         sourcename = self.get_sourcename()
+-        if inspect.isabstractmethod(self.object):
++        obj = self.parent.__dict__.get(self.object_name, self.object)
++        if inspect.isabstractmethod(obj):
+             self.add_line('   :abstractmethod:', sourcename)
++        if inspect.isclassmethod(obj):
++            self.add_line('   :classmethod:', sourcename)
+ 
+-        if safe_getattr(self.object, 'fget', None) and self.config.autodoc_typehints != 'none':
++        unwrapped = inspect.unwrap_all(self.object)
++        if safe_getattr(unwrapped, 'fget', None) and self.config.autodoc_typehints != 'none':
+             try:
+-                signature = inspect.signature(self.object.fget,
++                signature = inspect.signature(unwrapped.fget,
+                                               type_aliases=self.config.autodoc_type_aliases)
+                 if signature.return_annotation is not Parameter.empty:
+                     objrepr = stringify_typehint(signature.return_annotation)
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index 23dd9e930..229210cad 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -385,6 +385,7 @@ def iscoroutinefunction(obj: Any) -> bool:
+ 
+ def isproperty(obj: Any) -> bool:
+     """Check if the object is property."""
++    obj = unwrap_all(obj)
+     if sys.version_info >= (3, 8):
+         from functools import cached_property  # cached_property is available since py3.8
+         if isinstance(obj, cached_property):

@@ -1,0 +1,140 @@
+2026-11-08 15:34:59,828 - INFO - Creating container for sphinx-doc__sphinx-7985...
+2026-11-08 15:35:00,099 - INFO - Container for sphinx-doc__sphinx-7985 created: e35e22100a6428654d7cb1d469a0ce7d069e5d9806e88aa37160182d43e3827b
+2026-11-08 15:35:00,412 - INFO - Container for sphinx-doc__sphinx-7985 started: e35e22100a6428654d7cb1d469a0ce7d069e5d9806e88aa37160182d43e3827b
+2026-11-08 15:35:00,419 - INFO - Intermediate patch for sphinx-doc__sphinx-7985 written to logs/run_evaluation/agent-dev_hard-seed0/gated-agent/sphinx-doc__sphinx-7985/patch.diff, now applying to container...
+2026-11-08 15:35:00,633 - INFO - >>>>> Applied Patch:
+Checking patch sphinx/builders/linkcheck.py...
+Applied patch sphinx/builders/linkcheck.py cleanly.
+
+2026-11-08 15:35:00,901 - INFO - Git diff before:
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index dd5317087..01667985f 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -212,8 +212,6 @@ class CheckExternalLinksBuilder(Builder):
+             # check for various conditions without bothering the network
+             if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+                 return 'unchecked', '', 0
+-            elif not uri.startswith(('http:', 'https:')):
+-                return 'local', '', 0
+             elif uri in self.good:
+                 return 'working', 'old', 0
+             elif uri in self.broken:
+@@ -224,11 +222,41 @@ class CheckExternalLinksBuilder(Builder):
+                 if rex.match(uri):
+                     return 'ignored', '', 0
+ 
+-            # need to actually check the URI
+-            for _ in range(self.app.config.linkcheck_retries):
+-                status, info, code = check_uri()
+-                if status != "broken":
+-                    break
++            if not uri.startswith(('http:', 'https:')):
++                if '#' in uri:
++                    req_url, anchor = uri.split('#', 1)
++                else:
++                    req_url = uri
++                    anchor = None
++
++                if not req_url:
++                    status, info, code = 'working', '', 0
++                else:
++                    docdir = path.dirname(self.env.doc2path(docname))
++                    candidates = [
++                        path.normpath(path.join(docdir, req_url)),
++                        path.normpath(path.join(self.app.srcdir, req_url)),
++                    ]
++                    if req_url in self.env.found_docs:
++                        candidates.append(self.env.doc2path(req_url))
++
++                    found = any(path.exists(c) for c in candidates)
++                    if not found:
++                        for ext in ('', '.rst', '.txt', '.html', '.md'):
++                            if any(path.exists(c + ext) for c in candidates):
++                                found = True
++                                break
++
++                    if found:
++                        status, info, code = 'working', '', 0
++                    else:
++                        status, info, code = 'broken', __("local link not found: %s") % req_url, 0
++            else:
++                # need to actually check the URI
++                for _ in range(self.app.config.linkcheck_retries):
++                    status, info, code = check_uri()
++                    if status != "broken":
++                        break
+ 
+             if status == "working":
+                 self.good.add(uri)
+2026-11-08 15:35:00,915 - INFO - Eval script for sphinx-doc__sphinx-7985 written to logs/run_evaluation/agent-dev_hard-seed0/gated-agent/sphinx-doc__sphinx-7985/eval.sh; copying to container...
+2026-11-08 15:35:08,997 - INFO - Test runtime: 7.98 seconds
+2026-11-08 15:35:09,000 - INFO - Test output for sphinx-doc__sphinx-7985 written to logs/run_evaluation/agent-dev_hard-seed0/gated-agent/sphinx-doc__sphinx-7985/test_output.txt
+2026-11-08 15:35:09,052 - INFO - Git diff after:
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index dd5317087..01667985f 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -212,8 +212,6 @@ class CheckExternalLinksBuilder(Builder):
+             # check for various conditions without bothering the network
+             if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+                 return 'unchecked', '', 0
+-            elif not uri.startswith(('http:', 'https:')):
+-                return 'local', '', 0
+             elif uri in self.good:
+                 return 'working', 'old', 0
+             elif uri in self.broken:
+@@ -224,11 +222,41 @@ class CheckExternalLinksBuilder(Builder):
+                 if rex.match(uri):
+                     return 'ignored', '', 0
+ 
+-            # need to actually check the URI
+-            for _ in range(self.app.config.linkcheck_retries):
+-                status, info, code = check_uri()
+-                if status != "broken":
+-                    break
++            if not uri.startswith(('http:', 'https:')):
++                if '#' in uri:
++                    req_url, anchor = uri.split('#', 1)
++                else:
++                    req_url = uri
++                    anchor = None
++
++                if not req_url:
++                    status, info, code = 'working', '', 0
++                else:
++                    docdir = path.dirname(self.env.doc2path(docname))
++                    candidates = [
++                        path.normpath(path.join(docdir, req_url)),
++                        path.normpath(path.join(self.app.srcdir, req_url)),
++                    ]
++                    if req_url in self.env.found_docs:
++                        candidates.append(self.env.doc2path(req_url))
++
++                    found = any(path.exists(c) for c in candidates)
++                    if not found:
++                        for ext in ('', '.rst', '.txt', '.html', '.md'):
++                            if any(path.exists(c + ext) for c in candidates):
++                                found = True
++                                break
++
++                    if found:
++                        status, info, code = 'working', '', 0
++                    else:
++                        status, info, code = 'broken', __("local link not found: %s") % req_url, 0
++            else:
++                # need to actually check the URI
++                for _ in range(self.app.config.linkcheck_retries):
++                    status, info, code = check_uri()
++                    if status != "broken":
++                        break
+ 
+             if status == "working":
+                 self.good.add(uri)
+2026-11-08 15:35:09,053 - INFO - Grading answer for sphinx-doc__sphinx-7985...
+2026-11-08 15:35:09,062 - INFO - report: {'sphinx-doc__sphinx-7985': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['tests/test_build_linkcheck.py::test_defaults', 'tests/test_build_linkcheck.py::test_anchors_ignored'], 'failure': []}, 'PASS_TO_PASS': {'success': ['tests/test_build_linkcheck.py::test_defaults_json', 'tests/test_build_linkcheck.py::test_auth', 'tests/test_build_linkcheck.py::test_linkcheck_request_headers'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sphinx-doc__sphinx-7985: resolved: True
+2026-11-08 15:35:09,072 - INFO - Attempting to stop container sweb.eval.sphinx-doc__sphinx-7985.agent-dev_hard-seed0...
+2026-11-08 15:35:24,638 - INFO - Container sweb.eval.sphinx-doc__sphinx-7985.agent-dev_hard-seed0 stopped successfully.
+2026-11-08 15:35:24,659 - INFO - Attempting to remove container sweb.eval.sphinx-doc__sphinx-7985.agent-dev_hard-seed0...
+2026-11-08 15:35:24,843 - INFO - Container sweb.eval.sphinx-doc__sphinx-7985.agent-dev_hard-seed0 removed successfully.

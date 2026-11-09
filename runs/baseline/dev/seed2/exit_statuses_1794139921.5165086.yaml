@@ -1,0 +1,6 @@
+instances_by_exit_status:
+    Submitted:
+    - sphinx-doc__sphinx-8721
+    - django__django-12304
+    - django__django-12262
+    - sphinx-doc__sphinx-10466

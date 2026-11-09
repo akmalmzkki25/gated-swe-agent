@@ -1,0 +1,17 @@
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index f216e8797..dc4c3996d 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -398,6 +398,12 @@ def isgenericalias(obj: Any) -> bool:
+     if (hasattr(typing, '_GenericAlias') and  # only for py37+
+             isinstance(obj, typing._GenericAlias)):  # type: ignore
+         return True
++    elif (hasattr(typing, '_UnionGenericAlias') and
++          isinstance(obj, typing._UnionGenericAlias)):  # type: ignore
++        return True
++    elif (hasattr(typing, '_CallableGenericAlias') and
++          isinstance(obj, typing._CallableGenericAlias)):  # type: ignore
++        return True
+     elif (hasattr(types, 'GenericAlias') and  # only for py39+
+           isinstance(obj, types.GenericAlias)):  # type: ignore
+         return True

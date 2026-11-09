@@ -1,0 +1,23 @@
+2026-11-08 08:16:20,679 - minisweagent - INFO - Loading dataset /work/data/dev, split test...
+2026-11-08 08:16:21,608 - minisweagent - INFO - Running on 4 instances...
+2026-11-08 08:16:21,611 - minisweagent - INFO - Building agent config from specs: ['swebench.yaml', '/work/runs/baseline/dev/seed1/override.yaml']
+2026-11-08 08:16:27,384 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-52f34736 -w /testbed --rm swebench/sweb.eval.x86_64.django_1776_django-12304@sha256:46ad662e0ab1ab9417a26ceae392395f255634a054c25faf0fcfcd43aa52702c sleep 2h
+2026-11-08 08:16:27,386 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-b918c866 -w /testbed --rm swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8721@sha256:8f02afdb324767a2e56b7940569ea822cfa58c3c1f0ef9a910162d21cf52c3f5 sleep 2h
+2026-11-08 08:16:27,833 - minisweagent.environment - INFO - Started container minisweagent-b918c866 with ID 35f949a02f8a0c397fff43d6aa1b036993166d69343cb61799e308f5631c6867
+2026-11-08 08:16:27,945 - minisweagent.environment - INFO - Started container minisweagent-52f34736 with ID 165cd4cd414cb103790271e3a7c063d0a04742fd59579d0404f4cd8735fae3fe
+2026-11-08 08:17:50,814 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev/seed1/django__django-12304/django__django-12304.traj.json'
+2026-11-08 08:17:50,851 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-ce9f8e08 -w /testbed --rm swebench/sweb.eval.x86_64.django_1776_django-12262@sha256:23c0777e08a37bd0643f7638eaca9c57d1ee16fca79b6312b8d6de7fd1b5e7da sleep 2h
+2026-11-08 08:17:51,559 - minisweagent.environment - INFO - Started container minisweagent-ce9f8e08 with ID 197fb95a48a22000c3a1363577021f2ac525c816bd91e12015e981abbe0db8cb
+2026-11-08 12:07:43,795 - minisweagent - INFO - Loading dataset /work/data/dev, split test...
+2026-11-08 12:07:44,662 - minisweagent - INFO - Skipping 1 existing instances
+2026-11-08 12:07:44,664 - minisweagent - INFO - Running on 3 instances...
+2026-11-08 12:07:44,666 - minisweagent - INFO - Building agent config from specs: ['swebench.yaml', '/work/runs/baseline/dev/seed1/override.yaml']
+2026-11-08 12:07:47,678 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-45c4bef5 -w /testbed --rm swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8721@sha256:8f02afdb324767a2e56b7940569ea822cfa58c3c1f0ef9a910162d21cf52c3f5 sleep 2h
+2026-11-08 12:07:47,680 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-d39f9a2f -w /testbed --rm swebench/sweb.eval.x86_64.django_1776_django-12262@sha256:23c0777e08a37bd0643f7638eaca9c57d1ee16fca79b6312b8d6de7fd1b5e7da sleep 2h
+2026-11-08 12:07:48,184 - minisweagent.environment - INFO - Started container minisweagent-45c4bef5 with ID ade9d3ffaf84851e81dda3afcee094f0aebc41d8b9cb61d2f137b30ace2dcf66
+2026-11-08 12:07:48,270 - minisweagent.environment - INFO - Started container minisweagent-d39f9a2f with ID 72befb88c8631005ce383cc3b635e5a42f4ed3d013319feaea2b3998b7454af6
+2026-11-08 12:09:05,294 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev/seed1/sphinx-doc__sphinx-8721/sphinx-doc__sphinx-8721.traj.json'
+2026-11-08 12:09:05,330 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-6924678a -w /testbed --rm swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-10466@sha256:c02edca2a92a3353e0780dcd1b1a3ba2349245d7aa4e5fc6bc8f2a5327691452 sleep 2h
+2026-11-08 12:09:05,682 - minisweagent.environment - INFO - Started container minisweagent-6924678a with ID 3f0889cd49314833eb7bd16b23d630ca7d7a0c73d719d0d163ac0998edc4bd16
+2026-11-08 12:09:14,762 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev/seed1/django__django-12262/django__django-12262.traj.json'
+2026-11-08 12:11:08,537 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev/seed1/sphinx-doc__sphinx-10466/sphinx-doc__sphinx-10466.traj.json'

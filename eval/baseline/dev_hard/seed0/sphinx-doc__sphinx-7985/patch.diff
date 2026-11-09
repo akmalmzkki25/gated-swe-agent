@@ -1,0 +1,65 @@
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index dd5317087..7502f4fcf 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -75,6 +75,23 @@ def check_anchor(response: requests.requests.Response, anchor: str) -> bool:
+     return parser.found
+ 
+ 
++def check_local_anchor(filename: str, anchor: str) -> bool:
++    parser = AnchorCheckParser(anchor)
++    try:
++        with open(filename, "r", encoding="utf-8", errors="ignore") as f:
++            while True:
++                chunk = f.read(4096)
++                if not chunk:
++                    break
++                parser.feed(chunk)
++                if parser.found:
++                    break
++    except Exception:
++        pass
++    parser.close()
++    return parser.found
++
++
+ class CheckExternalLinksBuilder(Builder):
+     """
+     Checks for broken external links.
+@@ -213,7 +230,35 @@ class CheckExternalLinksBuilder(Builder):
+             if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+                 return 'unchecked', '', 0
+             elif not uri.startswith(('http:', 'https:')):
+-                return 'local', '', 0
++                if '#' in uri:
++                    req_url, anchor = uri.split('#', 1)
++                else:
++                    req_url = uri
++                    anchor = None
++
++                if req_url:
++                    if req_url.startswith('/'):
++                        filename = path.join(self.app.srcdir, req_url[1:])
++                    else:
++                        filename = path.join(path.dirname(self.env.doc2path(docname)), req_url)
++
++                    if path.exists(filename):
++                        pass
++                    else:
++                        for suffix in self.config.source_suffix:
++                            if path.exists(filename + suffix):
++                                filename = filename + suffix
++                                break
++                        else:
++                            return 'broken', __("Local file not found: %s") % req_url, 0
++                else:
++                    filename = self.env.doc2path(docname)
++
++                if anchor and self.app.config.linkcheck_anchors:
++                    if not check_local_anchor(filename, unquote(anchor)):
++                        return 'broken', __("Anchor '%s' not found") % anchor, 0
++
++                return 'working', '', 0
+             elif uri in self.good:
+                 return 'working', 'old', 0
+             elif uri in self.broken:

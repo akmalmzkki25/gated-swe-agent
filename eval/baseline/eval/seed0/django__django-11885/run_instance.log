@@ -1,0 +1,82 @@
+2026-11-08 12:32:27,409 - INFO - Creating container for django__django-11885...
+2026-11-08 12:32:27,477 - INFO - Container for django__django-11885 created: 89e4a1336de8bfe349c44796f81b9c2b81049b44410f80ad62b217afa980e3c6
+2026-11-08 12:32:27,686 - INFO - Container for django__django-11885 started: 89e4a1336de8bfe349c44796f81b9c2b81049b44410f80ad62b217afa980e3c6
+2026-11-08 12:32:27,692 - INFO - Intermediate patch for django__django-11885 written to logs/run_evaluation/baseline-eval-seed0/gemini__gemini-3.5-flash-lite/django__django-11885/patch.diff, now applying to container...
+2026-11-08 12:32:27,826 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/deletion.py...
+Applied patch django/db/models/deletion.py cleanly.
+
+2026-11-08 12:32:28,476 - INFO - Git diff before:
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index ae82d26340..e876388a97 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -62,6 +62,17 @@ def get_candidate_relations_to_delete(opts):
+ 
+ 
+ class Collector:
++    def fast_delete(self, objs):
++        if self.fast_deletes:
++            last_qs = self.fast_deletes[-1]
++            if last_qs.model == objs.model:
++                try:
++                    if last_qs.query.where.children[0].rhs == objs.query.where.children[0].rhs:
++                        self.fast_deletes[-1] = last_qs | objs
++                        return
++                except (AttributeError, IndexError):
++                    pass
++        self.fast_deletes.append(objs)
+     def __init__(self, using):
+         self.using = using
+         # Initially, {model: {instances}}, later values become lists.
+@@ -225,7 +236,7 @@ class Collector:
+                 for batch in batches:
+                     sub_objs = self.related_objects(related, batch)
+                     if self.can_fast_delete(sub_objs, from_field=field):
+-                        self.fast_deletes.append(sub_objs)
++                        self.fast_delete(sub_objs)
+                     else:
+                         related_model = related.related_model
+                         # Non-referenced fields can be deferred if no signal
+2026-11-08 12:32:28,481 - INFO - Eval script for django__django-11885 written to logs/run_evaluation/baseline-eval-seed0/gemini__gemini-3.5-flash-lite/django__django-11885/eval.sh; copying to container...
+2026-11-08 12:32:33,570 - INFO - Test runtime: 5.00 seconds
+2026-11-08 12:32:33,575 - INFO - Test output for django__django-11885 written to logs/run_evaluation/baseline-eval-seed0/gemini__gemini-3.5-flash-lite/django__django-11885/test_output.txt
+2026-11-08 12:32:33,629 - INFO - Git diff after:
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index ae82d26340..e876388a97 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -62,6 +62,17 @@ def get_candidate_relations_to_delete(opts):
+ 
+ 
+ class Collector:
++    def fast_delete(self, objs):
++        if self.fast_deletes:
++            last_qs = self.fast_deletes[-1]
++            if last_qs.model == objs.model:
++                try:
++                    if last_qs.query.where.children[0].rhs == objs.query.where.children[0].rhs:
++                        self.fast_deletes[-1] = last_qs | objs
++                        return
++                except (AttributeError, IndexError):
++                    pass
++        self.fast_deletes.append(objs)
+     def __init__(self, using):
+         self.using = using
+         # Initially, {model: {instances}}, later values become lists.
+@@ -225,7 +236,7 @@ class Collector:
+                 for batch in batches:
+                     sub_objs = self.related_objects(related, batch)
+                     if self.can_fast_delete(sub_objs, from_field=field):
+-                        self.fast_deletes.append(sub_objs)
++                        self.fast_delete(sub_objs)
+                     else:
+                         related_model = related.related_model
+                         # Non-referenced fields can be deferred if no signal
+2026-11-08 12:32:33,629 - INFO - Grading answer for django__django-11885...
+2026-11-08 12:32:33,633 - INFO - report: {'django__django-11885': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['test_fast_delete_combined_relationships (delete.tests.FastDeleteTests)']}, 'PASS_TO_PASS': {'success': ['test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests)', 'test_fast_delete_fk (delete.tests.FastDeleteTests)', 'test_fast_delete_inheritance (delete.tests.FastDeleteTests)', 'test_fast_delete_instance_set_pk_none (delete.tests.FastDeleteTests)', 'test_fast_delete_joined_qs (delete.tests.FastDeleteTests)', 'test_fast_delete_large_batch (delete.tests.FastDeleteTests)', 'test_fast_delete_m2m (delete.tests.FastDeleteTests)', 'test_fast_delete_qs (delete.tests.FastDeleteTests)', 'test_fast_delete_revm2m (delete.tests.FastDeleteTests)', 'test_auto (delete.tests.OnDeleteTests)', 'test_auto_nullable (delete.tests.OnDeleteTests)', 'test_cascade (delete.tests.OnDeleteTests)', 'test_cascade_from_child (delete.tests.OnDeleteTests)', 'test_cascade_from_parent (delete.tests.OnDeleteTests)', 'test_cascade_nullable (delete.tests.OnDeleteTests)', 'test_do_nothing (delete.tests.OnDeleteTests)', 'test_do_nothing_qscount (delete.tests.OnDeleteTests)', 'test_inheritance_cascade_down (delete.tests.OnDeleteTests)', 'test_inheritance_cascade_up (delete.tests.OnDeleteTests)', 'test_non_callable (delete.tests.OnDeleteTests)', 'test_o2o_setnull (delete.tests.OnDeleteTests)', 'test_protect (delete.tests.OnDeleteTests)', 'test_setdefault (delete.tests.OnDeleteTests)', 'test_setdefault_none (delete.tests.OnDeleteTests)', 'test_setnull (delete.tests.OnDeleteTests)', 'test_setnull_from_child (delete.tests.OnDeleteTests)', 'test_setnull_from_parent (delete.tests.OnDeleteTests)', 'test_setvalue (delete.tests.OnDeleteTests)', 'test_bulk (delete.tests.DeletionTests)', 'test_can_defer_constraint_checks (delete.tests.DeletionTests)', 'test_delete_with_keeping_parents (delete.tests.DeletionTests)', 'test_delete_with_keeping_parents_relationships (delete.tests.DeletionTests)', 'test_deletion_order (delete.tests.DeletionTests)', 'test_hidden_related (delete.tests.DeletionTests)', 'test_instance_update (delete.tests.DeletionTests)', 'test_large_delete (delete.tests.DeletionTests)', 'test_large_delete_related (delete.tests.DeletionTests)', 'test_m2m (delete.tests.DeletionTests)', 'test_model_delete_returns_num_rows (delete.tests.DeletionTests)', 'test_only_referenced_fields_selected (delete.tests.DeletionTests)', 'test_proxied_model_duplicate_queries (delete.tests.DeletionTests)', 'test_queryset_delete_returns_num_rows (delete.tests.DeletionTests)', 'test_relational_post_delete_signals_happen_before_parent_object (delete.tests.DeletionTests)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-11885: resolved: False
+2026-11-08 12:32:33,638 - INFO - Attempting to stop container sweb.eval.django__django-11885.baseline-eval-seed0...
+2026-11-08 12:32:48,982 - INFO - Container sweb.eval.django__django-11885.baseline-eval-seed0 stopped successfully.
+2026-11-08 12:32:48,983 - INFO - Attempting to remove container sweb.eval.django__django-11885.baseline-eval-seed0...
+2026-11-08 12:32:49,033 - INFO - Container sweb.eval.django__django-11885.baseline-eval-seed0 removed successfully.

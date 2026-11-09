@@ -1,0 +1,13 @@
+model:
+  model_name: gemini/gemini-3.5-flash-lite
+  model_kwargs:
+    temperature: 1.0
+    top_p: 0.95
+    max_tokens: 16384
+    reasoning_effort: low
+    drop_params: true
+    parallel_tool_calls: true
+    seed: 2
+agent:
+  step_limit: 100
+  cost_limit: 1.0

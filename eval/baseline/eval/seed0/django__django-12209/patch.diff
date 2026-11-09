@@ -1,0 +1,85 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..1f9de32b78 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -403,6 +403,11 @@ class ModelState:
+ 
+ class Model(metaclass=ModelBase):
+ 
++    def __setattr__(self, name, value):
++        if self._meta.pk and name in (self._meta.pk.name, self._meta.pk.attname):
++            self._state.pk_is_default_generated = False
++        super().__setattr__(name, value)
++
+     def __init__(self, *args, **kwargs):
+         # Alias some things as locals to avoid repeat global lookups
+         cls = self.__class__
+@@ -414,6 +419,7 @@ class Model(metaclass=ModelBase):
+ 
+         # Set up the storage for instance state
+         self._state = ModelState()
++        self._state.pk_is_default_generated = False
+ 
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+@@ -433,6 +439,8 @@ class Model(metaclass=ModelBase):
+                 if val is _DEFERRED:
+                     continue
+                 _setattr(self, field.attname, val)
++                if field == opts.pk:
++                    self._state.pk_is_default_generated = False
+         else:
+             # Slower, kwargs-ready version.
+             fields_iter = iter(opts.fields)
+@@ -441,12 +449,15 @@ class Model(metaclass=ModelBase):
+                     continue
+                 _setattr(self, field.attname, val)
+                 kwargs.pop(field.name, None)
++                if field == opts.pk:
++                    self._state.pk_is_default_generated = False
+ 
+         # Now we're left with the unprocessed fields that *must* come from
+         # keywords, or default.
+ 
+         for field in fields_iter:
+             is_related_object = False
++            is_default = False
+             # Virtual field
+             if field.attname not in kwargs and field.column is None:
+                 continue
+@@ -462,6 +473,7 @@ class Model(metaclass=ModelBase):
+                             val = kwargs.pop(field.attname)
+                         except KeyError:
+                             val = field.get_default()
++                            is_default = True
+                 else:
+                     try:
+                         val = kwargs.pop(field.attname)
+@@ -471,8 +483,10 @@ class Model(metaclass=ModelBase):
+                         # get_default() to be evaluated, and then not used.
+                         # Refs #12057.
+                         val = field.get_default()
++                        is_default = True
+             else:
+                 val = field.get_default()
++                is_default = True
+ 
+             if is_related_object:
+                 # If we are passed a related instance, set it using the
+@@ -484,6 +498,8 @@ class Model(metaclass=ModelBase):
+             else:
+                 if val is not _DEFERRED:
+                     _setattr(self, field.attname, val)
++                    if field == opts.pk:
++                        self._state.pk_is_default_generated = is_default
+ 
+         if kwargs:
+             property_names = opts._property_names
+@@ -851,6 +867,7 @@ class Model(metaclass=ModelBase):
+         if (
+             not force_insert and
+             self._state.adding and
++            getattr(self._state, "pk_is_default_generated", False) and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):

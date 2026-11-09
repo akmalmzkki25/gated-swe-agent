@@ -1,0 +1,22 @@
+{
+  "astropy__astropy-12907": "swebench/sweb.eval.x86_64.astropy_1776_astropy-12907@sha256:e082963099ed7d5a5f75a0be46e338be36faae33b2cba5289a9ddbd505997f1f",
+  "django__django-11790": "swebench/sweb.eval.x86_64.django_1776_django-11790@sha256:061b5e37b0dfc15512b9604c843618b47aece8e603d08d0926c3990e0e9b3ac4",
+  "django__django-11848": "swebench/sweb.eval.x86_64.django_1776_django-11848@sha256:08eac9219e5d4b15b445fde26c587157a0ad8a2d9209e4b1e266259edf51bb4b",
+  "sphinx-doc__sphinx-10435": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-10435@sha256:30d33734839d5f49cb85de2ef78d99a2c8869693b72c9abeb4d999bf1ffc830f",
+  "sphinx-doc__sphinx-10323": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-10323@sha256:b27e055730cb8a826e4e2cf0503d03c6770d537ab29cb6df8caa93ef5db51e8f",
+  "django__django-12209": "swebench/sweb.eval.x86_64.django_1776_django-12209@sha256:6781fe1de96e581d385aa7797a580274023f7a625a891f1ecd751ff303e6a256",
+  "sphinx-doc__sphinx-7757": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7757@sha256:afdd76c95a6cc039f5f2aa49ba8f66da3eddc72a0c11bbc32666b99496f237c0",
+  "django__django-11885": "swebench/sweb.eval.x86_64.django_1776_django-11885@sha256:dcc7a94bc42733bb59e7ce45a83e7df1f203ae55ad570a1a1f098c438c5f5ca2",
+  "django__django-12304": "swebench/sweb.eval.x86_64.django_1776_django-12304@sha256:46ad662e0ab1ab9417a26ceae392395f255634a054c25faf0fcfcd43aa52702c",
+  "sphinx-doc__sphinx-8721": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8721@sha256:8f02afdb324767a2e56b7940569ea822cfa58c3c1f0ef9a910162d21cf52c3f5",
+  "django__django-12262": "swebench/sweb.eval.x86_64.django_1776_django-12262@sha256:23c0777e08a37bd0643f7638eaca9c57d1ee16fca79b6312b8d6de7fd1b5e7da",
+  "sphinx-doc__sphinx-10466": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-10466@sha256:c02edca2a92a3353e0780dcd1b1a3ba2349245d7aa4e5fc6bc8f2a5327691452",
+  "django__django-12708": "swebench/sweb.eval.x86_64.django_1776_django-12708@sha256:3722a130f618602e5636c8c7ddd821550e2c2462b569907c4140fc162e24671e",
+  "django__django-12325": "swebench/sweb.eval.x86_64.django_1776_django-12325@sha256:9c15847c3fd7d269adf15233bd7034bb9e0491e45fefe87454013d2bdf7a6efe",
+  "sphinx-doc__sphinx-9461": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-9461@sha256:5927ba1f035f87117341343035f83150ab5a57fbdbaf49db13a36b809baaa8c7",
+  "sphinx-doc__sphinx-9229": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-9229@sha256:63840fa7b92aa018cc9d45344872ebb241951a44c05c41fa8e6a038c28ffb6b8",
+  "django__django-12774": "swebench/sweb.eval.x86_64.django_1776_django-12774@sha256:c3d0148636ca1fc2170212ba6cc2c3c2df470ccca9e2e6b755447e3e51abd9f6",
+  "django__django-12050": "swebench/sweb.eval.x86_64.django_1776_django-12050@sha256:34773901589784072af940b29697018dc17b32e37b4ff135a153c99ac2c38dec",
+  "sphinx-doc__sphinx-7985": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7985@sha256:c82a2b449cb7709d069a6bf6a623ca8063ebdbbce3ded5ce6a066d24ac3816c1",
+  "sphinx-doc__sphinx-8551": "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8551@sha256:7ef3c26b1f402bcae518faddbdea62e12496a29b8d49b582a752874df1a5cd57"
+}

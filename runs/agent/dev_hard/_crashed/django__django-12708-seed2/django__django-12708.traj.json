@@ -1,0 +1,36 @@
+{
+  "instance_id": "django__django-12708",
+  "info": {
+    "agent_version": "no-commit+dirty",
+    "seed": 2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "model_kwargs": {
+      "temperature": 1.0,
+      "top_p": 0.95,
+      "max_tokens": 16384,
+      "reasoning_effort": "low",
+      "drop_params": true,
+      "parallel_tool_calls": true,
+      "seed": 2
+    },
+    "config": {
+      "step_limit": 100,
+      "cost_limit": 1.0,
+      "max_revisions": 3,
+      "max_repro_attempts": 2,
+      "low_budget_fraction": 0.15,
+      "repeat_limit": 3,
+      "stall_limit": 8,
+      "test_timeout": 900,
+      "bash_timeout": 60,
+      "observation_chars": 10000
+    },
+    "exit_status": "error",
+    "error": "OSError: command failed (1): bash: line 1: repro/__init__.py.track3-write: No such file or directory\n\nTraceback (most recent call last):\n  File \"/work/src/track3/run_agent.py\", line 63, in run_instance\n    result = GatedAgent(model, env, instance[\"repo\"], cfg).run(instance[\"problem_statement\"])\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/src/track3/agent/loop.py\", line 129, in run\n    if self._turn() == DONE:\n       ^^^^^^^^^^^^\n  File \"/work/src/track3/agent/loop.py\", line 158, in _turn\n    step = self._dispatch(action)\n           ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/src/track3/agent/loop.py\", line 261, in _dispatch\n    return getattr(self, f\"_tool_{tool}\")(**args)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/src/track3/agent/loop.py\", line 363, in _tool_create\n    r = self.ws.create(path, content)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/work/src/track3/agent/workspace.py\", line 109, in create\n    self.write(rel, content)\n  File \"/work/src/track3/agent/workspace.py\", line 57, in write\n    self._ok(f\": > {tmp}\")\n  File \"/work/src/track3/agent/workspace.py\", line 84, in _ok\n    raise OSError(f\"command failed ({rc}): {out[-500:]}\")\nOSError: command failed (1): bash: line 1: repro/__init__.py.track3-write: No such file or directory\n\n",
+    "n_calls": null,
+    "cost": null
+  },
+  "candidates": [],
+  "events": [],
+  "messages": []
+}

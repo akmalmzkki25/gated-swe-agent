@@ -1,0 +1,45 @@
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index dd5317087..ea12978d0 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -213,7 +213,39 @@ class CheckExternalLinksBuilder(Builder):
+             if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+                 return 'unchecked', '', 0
+             elif not uri.startswith(('http:', 'https:')):
+-                return 'local', '', 0
++                if '#' in uri:
++                    req_url, anchor = uri.split('#', 1)
++                else:
++                    req_url = uri
++                    anchor = None
++
++                if not req_url:
++                    return 'working', '', 0
++
++                if req_url.startswith('/'):
++                    candidates = [
++                        path.normpath(path.join(self.env.srcdir, req_url.lstrip('/'))),
++                    ]
++                    for suffix in self.config.source_suffix:
++                        candidates.append(path.normpath(path.join(self.env.srcdir, req_url.lstrip('/') + suffix)))
++                else:
++                    docpath = self.env.doc2path(docname, base=True)
++                    docdir = path.dirname(docpath)
++                    candidates = [
++                        path.normpath(path.join(docdir, req_url)),
++                        path.normpath(path.join(self.env.srcdir, req_url)),
++                    ]
++                    for suffix in self.config.source_suffix:
++                        candidates.append(path.normpath(path.join(docdir, req_url + suffix)))
++                        candidates.append(path.normpath(path.join(self.env.srcdir, req_url + suffix)))
++
++                if req_url in self.env.found_docs:
++                    candidates.append(self.env.doc2path(req_url))
++
++                if any(path.exists(c) for c in candidates):
++                    return 'working', '', 0
++                else:
++                    return 'broken', __('Local file not found: %s') % req_url, 0
+             elif uri in self.good:
+                 return 'working', 'old', 0
+             elif uri in self.broken:

@@ -1,0 +1,18 @@
+diff --git a/sphinx/writers/latex.py b/sphinx/writers/latex.py
+index e0c7d56f8..1321f8c32 100644
+--- a/sphinx/writers/latex.py
++++ b/sphinx/writers/latex.py
+@@ -1709,10 +1709,10 @@ class LaTeXTranslator(SphinxTranslator):
+             node.astext(), lang, opts=opts, location=node)
+         # TODO: Use nowrap option once LaTeX formatter supports it
+         # https://github.com/pygments/pygments/pull/1343
+-        hlcode = hlcode.replace(r'\begin{Verbatim}[commandchars=\\\{\}]',
+-                                r'\sphinxcode{\sphinxupquote{')
++        hlcode = hlcode.replace(r'\begin{Verbatim}[commandchars=\\\{\}]' + CR,
++                                r'\sphinxcode{\sphinxupquote{%' + CR)
+         # get consistent trailer
+-        hlcode = hlcode.rstrip()[:-14]  # strip \end{Verbatim}
++        hlcode = hlcode.rstrip()[:-14] + '%' + CR  # strip \end{Verbatim}
+         self.body.append(hlcode)
+         self.body.append('}}')
+         raise nodes.SkipNode

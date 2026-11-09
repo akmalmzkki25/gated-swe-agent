@@ -1,0 +1,75 @@
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index dd5317087..a226ea8c5 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -212,8 +212,6 @@ class CheckExternalLinksBuilder(Builder):
+             # check for various conditions without bothering the network
+             if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+                 return 'unchecked', '', 0
+-            elif not uri.startswith(('http:', 'https:')):
+-                return 'local', '', 0
+             elif uri in self.good:
+                 return 'working', 'old', 0
+             elif uri in self.broken:
+@@ -224,6 +222,61 @@ class CheckExternalLinksBuilder(Builder):
+                 if rex.match(uri):
+                     return 'ignored', '', 0
+ 
++            if not uri.startswith(('http:', 'https:')):
++                if '#' in uri:
++                    req_url, anchor = uri.split('#', 1)
++                    for rex in self.anchors_ignore:
++                        if rex.match(anchor):
++                            anchor = None
++                            break
++                else:
++                    req_url = uri
++                    anchor = None
++
++                if req_url:
++                    docpath = self.env.doc2path(docname)
++                    basedir = path.dirname(docpath) if docpath else self.app.srcdir
++
++                    candidates = [
++                        path.normpath(path.join(basedir, req_url)),
++                        path.normpath(path.join(self.app.srcdir, req_url)),
++                    ]
++                    found = False
++                    for candidate in candidates:
++                        if path.exists(candidate):
++                            found = True
++                            break
++                        for suffix in self.app.config.source_suffix:
++                            if path.exists(candidate + suffix):
++                                found = True
++                                break
++                        if self.env.path2doc(candidate) in self.env.found_docs:
++                            found = True
++                            break
++
++                    if not found and req_url in self.env.found_docs:
++                        found = True
++
++                    if not found:
++                        status = 'broken'
++                        info = __("Local file %s not found") % req_url
++                        code = 0
++                    else:
++                        status = 'working'
++                        info = ''
++                        code = 0
++                else:
++                    status = 'working'
++                    info = ''
++                    code = 0
++
++                if status == "working":
++                    self.good.add(uri)
++                elif status == "broken":
++                    self.broken[uri] = info
++
++                return (status, info, code)
++
+             # need to actually check the URI
+             for _ in range(self.app.config.linkcheck_retries):
+                 status, info, code = check_uri()

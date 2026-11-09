@@ -1,0 +1,27 @@
+2026-11-08 14:18:29,207 - minisweagent - INFO - Loading dataset /work/data/dev_hard, split test...
+2026-11-08 14:18:29,773 - minisweagent - INFO - Running on 8 instances...
+2026-11-08 14:18:29,774 - minisweagent - INFO - Building agent config from specs: ['swebench.yaml', '/work/runs/baseline/dev_hard/seed0/override.yaml']
+2026-11-08 14:18:32,494 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-cd332fca -w /testbed --rm swebench/sweb.eval.x86_64.django_1776_django-12708@sha256:3722a130f618602e5636c8c7ddd821550e2c2462b569907c4140fc162e24671e sleep 2h
+2026-11-08 14:18:32,496 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-0d0d0d90 -w /testbed --rm swebench/sweb.eval.x86_64.django_1776_django-12325@sha256:9c15847c3fd7d269adf15233bd7034bb9e0491e45fefe87454013d2bdf7a6efe sleep 2h
+2026-11-08 14:18:32,801 - minisweagent.environment - INFO - Started container minisweagent-cd332fca with ID 6a2caebb0b14bd8389b068d007f37e6893b1dde963582339036f0adef89ecb62
+2026-11-08 14:18:32,849 - minisweagent.environment - INFO - Started container minisweagent-0d0d0d90 with ID d1e2a9ab637677fd66619ec033c10b4a668cb47fc1853ece52b3573f77dd4d2f
+2026-11-08 14:19:50,646 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev_hard/seed0/django__django-12325/django__django-12325.traj.json'
+2026-11-08 14:19:50,673 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-7154935a -w /testbed --rm swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-9461@sha256:5927ba1f035f87117341343035f83150ab5a57fbdbaf49db13a36b809baaa8c7 sleep 2h
+2026-11-08 14:19:50,978 - minisweagent.environment - INFO - Started container minisweagent-7154935a with ID 9446208b07082f31ebaebf1ab709b7253041bb4e1bfe81c03cdb80c1009a989f
+2026-11-08 14:20:28,942 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev_hard/seed0/django__django-12708/django__django-12708.traj.json'
+2026-11-08 14:20:28,973 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-4cd543db -w /testbed --rm swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-9229@sha256:63840fa7b92aa018cc9d45344872ebb241951a44c05c41fa8e6a038c28ffb6b8 sleep 2h
+2026-11-08 14:20:29,253 - minisweagent.environment - INFO - Started container minisweagent-4cd543db with ID 3d841192ef91571635956b2829b15e4194316a97e0b740dc6995d68f58924f07
+2026-11-08 14:24:10,623 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev_hard/seed0/sphinx-doc__sphinx-9229/sphinx-doc__sphinx-9229.traj.json'
+2026-11-08 14:24:10,655 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-f81eed4c -w /testbed --rm swebench/sweb.eval.x86_64.django_1776_django-12774@sha256:c3d0148636ca1fc2170212ba6cc2c3c2df470ccca9e2e6b755447e3e51abd9f6 sleep 2h
+2026-11-08 14:24:10,959 - minisweagent.environment - INFO - Started container minisweagent-f81eed4c with ID 37e79159dcc59d6d091feba4c05545a6d8f1b9cbe6a8655a559d6ded4fda156e
+2026-11-08 14:25:00,758 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev_hard/seed0/sphinx-doc__sphinx-9461/sphinx-doc__sphinx-9461.traj.json'
+2026-11-08 14:25:00,783 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-bff87619 -w /testbed --rm swebench/sweb.eval.x86_64.django_1776_django-12050@sha256:34773901589784072af940b29697018dc17b32e37b4ff135a153c99ac2c38dec sleep 2h
+2026-11-08 14:25:01,106 - minisweagent.environment - INFO - Started container minisweagent-bff87619 with ID 071c250da31ada0ce652912ffaa94ee7759c9c09943ed95e86de7f1b9be981a1
+2026-11-08 14:25:39,172 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev_hard/seed0/django__django-12774/django__django-12774.traj.json'
+2026-11-08 14:25:39,203 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-e2cbdee3 -w /testbed --rm swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-7985@sha256:c82a2b449cb7709d069a6bf6a623ca8063ebdbbce3ded5ce6a066d24ac3816c1 sleep 2h
+2026-11-08 14:25:39,479 - minisweagent.environment - INFO - Started container minisweagent-e2cbdee3 with ID ced4023b3e8083129813a37cf5a94d56af781fef9fe9bda3963b6e164d2cf979
+2026-11-08 14:26:08,600 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev_hard/seed0/django__django-12050/django__django-12050.traj.json'
+2026-11-08 14:26:08,626 - minisweagent.environment - DEBUG - Starting container with command: docker run -d --name minisweagent-0d97cc9a -w /testbed --rm swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8551@sha256:7ef3c26b1f402bcae518faddbdea62e12496a29b8d49b582a752874df1a5cd57 sleep 2h
+2026-11-08 14:26:08,920 - minisweagent.environment - INFO - Started container minisweagent-0d97cc9a with ID cdea44c1e49c46271a91df06a551ae0147db6ef57db31fea0be197c9adfa80a0
+2026-11-08 14:27:57,378 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev_hard/seed0/sphinx-doc__sphinx-8551/sphinx-doc__sphinx-8551.traj.json'
+2026-11-08 14:28:55,036 - minisweagent - INFO - Saved trajectory to '/work/runs/baseline/dev_hard/seed0/sphinx-doc__sphinx-7985/sphinx-doc__sphinx-7985.traj.json'

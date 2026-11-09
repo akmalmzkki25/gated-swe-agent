@@ -1,0 +1,44 @@
+2026-11-08 15:15:07,277 - INFO - Creating container for sphinx-doc__sphinx-8721...
+2026-11-08 15:15:07,428 - INFO - Container for sphinx-doc__sphinx-8721 created: 7dc6f21f892dc5d0707765df7fe48c1fc05f1569961ef27a162828ae740ba669
+2026-11-08 15:15:07,800 - INFO - Container for sphinx-doc__sphinx-8721 started: 7dc6f21f892dc5d0707765df7fe48c1fc05f1569961ef27a162828ae740ba669
+2026-11-08 15:15:07,809 - INFO - Intermediate patch for sphinx-doc__sphinx-8721 written to logs/run_evaluation/agent-dev-seed1/gated-agent/sphinx-doc__sphinx-8721/patch.diff, now applying to container...
+2026-11-08 15:15:08,014 - INFO - >>>>> Applied Patch:
+Checking patch sphinx/ext/viewcode.py...
+Applied patch sphinx/ext/viewcode.py cleanly.
+
+2026-11-08 15:15:08,653 - INFO - Git diff before:
+diff --git a/sphinx/ext/viewcode.py b/sphinx/ext/viewcode.py
+index a7d52a91c..060604e25 100755
+--- a/sphinx/ext/viewcode.py
++++ b/sphinx/ext/viewcode.py
+@@ -182,6 +182,8 @@ def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], Non
+     env = app.builder.env
+     if not hasattr(env, '_viewcode_modules'):
+         return
++    if app.builder.name.startswith("epub") and not env.config.viewcode_enable_epub:
++        return
+     highlighter = app.builder.highlighter  # type: ignore
+     urito = app.builder.get_relative_uri
+2026-11-08 15:15:08,659 - INFO - Eval script for sphinx-doc__sphinx-8721 written to logs/run_evaluation/agent-dev-seed1/gated-agent/sphinx-doc__sphinx-8721/eval.sh; copying to container...
+2026-11-08 15:15:14,849 - INFO - Test runtime: 6.10 seconds
+2026-11-08 15:15:14,858 - INFO - Test output for sphinx-doc__sphinx-8721 written to logs/run_evaluation/agent-dev-seed1/gated-agent/sphinx-doc__sphinx-8721/test_output.txt
+2026-11-08 15:15:14,931 - INFO - Git diff after:
+diff --git a/sphinx/ext/viewcode.py b/sphinx/ext/viewcode.py
+index a7d52a91c..060604e25 100755
+--- a/sphinx/ext/viewcode.py
++++ b/sphinx/ext/viewcode.py
+@@ -182,6 +182,8 @@ def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], Non
+     env = app.builder.env
+     if not hasattr(env, '_viewcode_modules'):
+         return
++    if app.builder.name.startswith("epub") and not env.config.viewcode_enable_epub:
++        return
+     highlighter = app.builder.highlighter  # type: ignore
+     urito = app.builder.get_relative_uri
+2026-11-08 15:15:14,931 - INFO - Grading answer for sphinx-doc__sphinx-8721...
+2026-11-08 15:15:14,950 - INFO - report: {'sphinx-doc__sphinx-8721': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['tests/test_ext_viewcode.py::test_viewcode_epub_default'], 'failure': []}, 'PASS_TO_PASS': {'success': ['tests/test_ext_viewcode.py::test_viewcode_epub_enabled', 'tests/test_ext_viewcode.py::test_linkcode', 'tests/test_ext_viewcode.py::test_local_source_files'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sphinx-doc__sphinx-8721: resolved: True
+2026-11-08 15:15:14,956 - INFO - Attempting to stop container sweb.eval.sphinx-doc__sphinx-8721.agent-dev-seed1...
+2026-11-08 15:15:30,376 - INFO - Container sweb.eval.sphinx-doc__sphinx-8721.agent-dev-seed1 stopped successfully.
+2026-11-08 15:15:30,387 - INFO - Attempting to remove container sweb.eval.sphinx-doc__sphinx-8721.agent-dev-seed1...
+2026-11-08 15:15:30,518 - INFO - Container sweb.eval.sphinx-doc__sphinx-8721.agent-dev-seed1 removed successfully.

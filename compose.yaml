@@ -1,0 +1,20 @@
+# Every reported number is produced through this runner:
+#   docker compose run --rm runner <command>
+# The Linux venv lives at /opt/venv inside the image, outside the /work bind mount,
+# so a host .venv (e.g. a Windows one) is never used here.
+name: gated-swe-agent
+services:
+  runner:
+    build:
+      context: .
+      dockerfile: docker/runner.Dockerfile
+    image: gated-swe-agent-runner:0.1.0
+    working_dir: /work
+    volumes:
+      - .:/work
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      PYTHONUTF8: "1"

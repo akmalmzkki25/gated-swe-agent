@@ -1,0 +1,6 @@
+# Patches and shell scripts run inside Linux containers: never let Windows turn LF into CRLF.
+* text=auto eol=lf
+*.parquet binary
+*.gz binary
+# Harness evidence (test output, logs, reports) is kept byte-for-byte as the harness wrote it.
+eval/** -text

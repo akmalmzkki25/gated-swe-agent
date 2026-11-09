@@ -1,0 +1,10 @@
+instances_by_exit_status:
+    Submitted:
+    - astropy__astropy-12907
+    - django__django-11790
+    - django__django-11848
+    - sphinx-doc__sphinx-10435
+    - sphinx-doc__sphinx-10323
+    - sphinx-doc__sphinx-7757
+    - django__django-12209
+    - django__django-11885

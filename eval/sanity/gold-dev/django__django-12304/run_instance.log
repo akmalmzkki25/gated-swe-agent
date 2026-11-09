@@ -1,0 +1,44 @@
+2026-11-08 07:40:03,468 - INFO - Creating container for django__django-12304...
+2026-11-08 07:40:03,574 - INFO - Container for django__django-12304 created: ead7a31ba7d913a4204eaeef4d3af62a6eb97910697321a9921cb2d3aee33ae0
+2026-11-08 07:40:03,844 - INFO - Container for django__django-12304 started: ead7a31ba7d913a4204eaeef4d3af62a6eb97910697321a9921cb2d3aee33ae0
+2026-11-08 07:40:03,850 - INFO - Intermediate patch for django__django-12304 written to logs/run_evaluation/sanity-gold-dev/gold/django__django-12304/patch.diff, now applying to container...
+2026-11-08 07:40:04,048 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/enums.py...
+Applied patch django/db/models/enums.py cleanly.
+
+2026-11-08 07:40:07,667 - INFO - Git diff before:
+diff --git a/django/db/models/enums.py b/django/db/models/enums.py
+index f48143ddaf..51821a2b45 100644
+--- a/django/db/models/enums.py
++++ b/django/db/models/enums.py
+@@ -31,6 +31,7 @@ class ChoicesMeta(enum.EnumMeta):
+         # that is passed in as "self" as the value to use when looking up the
+         # label in the choices.
+         cls.label = property(lambda self: cls._value2label_map_.get(self.value))
++        cls.do_not_call_in_templates = True
+         return enum.unique(cls)
+ 
+     def __contains__(cls, member):
+2026-11-08 07:40:07,672 - INFO - Eval script for django__django-12304 written to logs/run_evaluation/sanity-gold-dev/gold/django__django-12304/eval.sh; copying to container...
+2026-11-08 07:40:21,292 - INFO - Test runtime: 13.51 seconds
+2026-11-08 07:40:21,297 - INFO - Test output for django__django-12304 written to logs/run_evaluation/sanity-gold-dev/gold/django__django-12304/test_output.txt
+2026-11-08 07:40:21,358 - INFO - Git diff after:
+diff --git a/django/db/models/enums.py b/django/db/models/enums.py
+index f48143ddaf..51821a2b45 100644
+--- a/django/db/models/enums.py
++++ b/django/db/models/enums.py
+@@ -31,6 +31,7 @@ class ChoicesMeta(enum.EnumMeta):
+         # that is passed in as "self" as the value to use when looking up the
+         # label in the choices.
+         cls.label = property(lambda self: cls._value2label_map_.get(self.value))
++        cls.do_not_call_in_templates = True
+         return enum.unique(cls)
+ 
+     def __contains__(cls, member):
+2026-11-08 07:40:21,359 - INFO - Grading answer for django__django-12304...
+2026-11-08 07:40:21,364 - INFO - report: {'django__django-12304': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_templates (model_enums.tests.ChoicesTests)'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_integerchoices (model_enums.tests.ChoicesTests)', 'test_integerchoices_auto_label (model_enums.tests.ChoicesTests)', 'test_integerchoices_containment (model_enums.tests.ChoicesTests)', 'test_integerchoices_empty_label (model_enums.tests.ChoicesTests)', 'test_integerchoices_functional_api (model_enums.tests.ChoicesTests)', 'test_invalid_definition (model_enums.tests.ChoicesTests)', 'test_str (model_enums.tests.ChoicesTests)', 'test_textchoices (model_enums.tests.ChoicesTests)', 'test_textchoices_auto_label (model_enums.tests.ChoicesTests)', 'test_textchoices_blank_value (model_enums.tests.ChoicesTests)', 'test_textchoices_containment (model_enums.tests.ChoicesTests)', 'test_textchoices_empty_label (model_enums.tests.ChoicesTests)', 'test_textchoices_functional_api (model_enums.tests.ChoicesTests)', 'test_bool_unsupported (model_enums.tests.CustomChoicesTests)', 'test_labels_valid (model_enums.tests.CustomChoicesTests)', 'test_timezone_unsupported (model_enums.tests.CustomChoicesTests)', 'test_uuid_unsupported (model_enums.tests.CustomChoicesTests)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-12304: resolved: True
+2026-11-08 07:40:21,369 - INFO - Attempting to stop container sweb.eval.django__django-12304.sanity-gold-dev...
+2026-11-08 07:40:36,971 - INFO - Container sweb.eval.django__django-12304.sanity-gold-dev stopped successfully.
+2026-11-08 07:40:36,973 - INFO - Attempting to remove container sweb.eval.django__django-12304.sanity-gold-dev...
+2026-11-08 07:40:37,119 - INFO - Container sweb.eval.django__django-12304.sanity-gold-dev removed successfully.

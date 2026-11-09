@@ -1,0 +1,63 @@
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 1cecb1f79..3bd5d4704 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -2675,10 +2675,13 @@ class PropertyDocumenter(DocstringStripSignatureMixin, ClassLevelDocumenter):  #
+         sourcename = self.get_sourcename()
+         if inspect.isabstractmethod(self.object):
+             self.add_line('   :abstractmethod:', sourcename)
++        if isinstance(self.object, classmethod):
++            self.add_line('   :classmethod:', sourcename)
+ 
+-        if safe_getattr(self.object, 'fget', None) and self.config.autodoc_typehints != 'none':
++        prop = self.object.__func__ if isinstance(self.object, classmethod) else self.object
++        if safe_getattr(prop, 'fget', None) and self.config.autodoc_typehints != 'none':
+             try:
+-                signature = inspect.signature(self.object.fget,
++                signature = inspect.signature(prop.fget,
+                                               type_aliases=self.config.autodoc_type_aliases)
+                 if signature.return_annotation is not Parameter.empty:
+                     objrepr = stringify_typehint(signature.return_annotation)
+diff --git a/sphinx/util/inspect.py b/sphinx/util/inspect.py
+index 23dd9e930..a8efd0269 100644
+--- a/sphinx/util/inspect.py
++++ b/sphinx/util/inspect.py
+@@ -390,7 +390,13 @@ def isproperty(obj: Any) -> bool:
+         if isinstance(obj, cached_property):
+             return True
+ 
+-    return isinstance(obj, property)
++    if isinstance(obj, property):
++        return True
++
++    if isinstance(obj, classmethod) and isproperty(getattr(obj, '__func__', None)):
++        return True
++
++    return False
+ 
+ 
+ def isgenericalias(obj: Any) -> bool:
+@@ -411,7 +417,13 @@ def isgenericalias(obj: Any) -> bool:
+ def safe_getattr(obj: Any, name: str, *defargs: Any) -> Any:
+     """A getattr() that turns all exceptions into AttributeErrors."""
+     try:
+-        return getattr(obj, name, *defargs)
++        val = getattr(obj, name, *defargs)
++        if isinstance(obj, type):
++            for base in getmro(obj):
++                attr = base.__dict__.get(name)
++                if isinstance(attr, classmethod) and isproperty(getattr(attr, '__func__', None)):
++                    return attr
++        return val
+     except Exception as exc:
+         # sometimes accessing a property raises an exception (e.g.
+         # NotImplementedError), so let's try to read the attribute directly
+@@ -840,6 +852,8 @@ def getdoc(obj: Any, attrgetter: Callable = safe_getattr,
+     doc = attrgetter(obj, '__doc__', None)
+     if ispartial(obj) and doc == obj.__class__.__doc__:
+         return getdoc(obj.func)
++    elif isinstance(obj, classmethod) and doc == obj.__class__.__doc__:
++        return getdoc(obj.func)
+     elif doc is None and allow_inherited:
+         if cls and name:
+             # Check a docstring of the attribute or method from super classes.

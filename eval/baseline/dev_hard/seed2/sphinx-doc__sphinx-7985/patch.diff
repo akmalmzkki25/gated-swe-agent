@@ -1,0 +1,54 @@
+diff --git a/sphinx/builders/linkcheck.py b/sphinx/builders/linkcheck.py
+index dd5317087..c60eff4b1 100644
+--- a/sphinx/builders/linkcheck.py
++++ b/sphinx/builders/linkcheck.py
+@@ -92,6 +92,7 @@ class CheckExternalLinksBuilder(Builder):
+         self.good = set()       # type: Set[str]
+         self.broken = {}        # type: Dict[str, str]
+         self.redirected = {}    # type: Dict[str, Tuple[str, int]]
++        self.local_good = set() # type: Set[str]
+         # set a timeout for non-responding servers
+         socket.setdefaulttimeout(5.0)
+         # create output file
+@@ -212,7 +213,7 @@ class CheckExternalLinksBuilder(Builder):
+             # check for various conditions without bothering the network
+             if len(uri) == 0 or uri.startswith(('#', 'mailto:', 'ftp:')):
+                 return 'unchecked', '', 0
+-            elif not uri.startswith(('http:', 'https:')):
++            elif uri in self.local_good:
+                 return 'local', '', 0
+             elif uri in self.good:
+                 return 'working', 'old', 0
+@@ -224,6 +225,32 @@ class CheckExternalLinksBuilder(Builder):
+                 if rex.match(uri):
+                     return 'ignored', '', 0
+ 
++            if not uri.startswith(('http:', 'https:')):
++                if '#' in uri:
++                    req_url, anchor = uri.split('#', 1)
++                else:
++                    req_url = uri
++                    anchor = None
++
++                if req_url:
++                    if req_url in self.env.found_docs:
++                        self.local_good.add(uri)
++                        return 'local', '', 0
++                    try:
++                        rel_fn, abs_path = self.env.relfn2path(req_url, docname)
++                        if path.exists(abs_path) or any(path.exists(abs_path + s) for s in self.env.config.source_suffix):
++                            self.local_good.add(uri)
++                            return 'local', '', 0
++                        info = __("Local file not found: %s") % rel_fn
++                        self.broken[uri] = info
++                        return 'broken', info, 0
++                    except Exception as err:
++                        info = str(err)
++                        self.broken[uri] = info
++                        return 'broken', info, 0
++                else:
++                    return 'local', '', 0
++
+             # need to actually check the URI
+             for _ in range(self.app.config.linkcheck_retries):
+                 status, info, code = check_uri()
