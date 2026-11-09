@@ -3,6 +3,8 @@
     track3 baseline --split eval --seeds 0,1,2   mini-swe-agent 2.4.6, then the SWE-bench harness
     track3 agent    --split eval --seeds 0,1,2   the gated agent, then the SWE-bench harness
     track3 eval     --who baseline --split eval --seeds 0,1,2   re-score committed predictions only (no API key)
+    track3 report                                rebuild results/per_task.csv and results/summary.md from committed files
+    track3 all      --split eval --seeds 0,1,2   baseline, agent, contamination probes, report
 """
 
 from __future__ import annotations
@@ -64,6 +66,24 @@ def eval_only(
         raise typer.BadParameter(f"--who must be one of {WHO}")
     for seed in _seeds(seeds):
         score(who, split, seed, workers, rescore_only=collect_only)
+
+
+@app.command()
+def report() -> None:
+    from track3.report import main
+
+    main()
+
+
+@app.command("all")
+def run_all(split: str = "eval", seeds: str = "0,1,2", workers: int = 2) -> None:
+    """Everything behind the reported numbers, in order."""
+    baseline(split, seeds, workers)
+    agent(split, seeds, workers)
+    from track3.contamination import analyze
+
+    analyze(split, tuple(_seeds(seeds)))
+    report()
 
 
 @app.command()

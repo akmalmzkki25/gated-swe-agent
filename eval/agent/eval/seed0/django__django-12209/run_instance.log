@@ -1,0 +1,138 @@
+2026-11-09 06:12:08,058 - INFO - Creating container for django__django-12209...
+2026-11-09 06:12:08,186 - INFO - Container for django__django-12209 created: b37d083c20b4eb77d23b6fea7a84853c8f4d5cc7593244cb74d71c98c1079cd4
+2026-11-09 06:12:08,416 - INFO - Container for django__django-12209 started: b37d083c20b4eb77d23b6fea7a84853c8f4d5cc7593244cb74d71c98c1079cd4
+2026-11-09 06:12:08,421 - INFO - Intermediate patch for django__django-12209 written to logs/run_evaluation/agent-eval-seed0/gated-agent/django__django-12209/patch.diff, now applying to container...
+2026-11-09 06:12:08,593 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/base.py...
+Applied patch django/db/models/base.py cleanly.
+
+2026-11-09 06:12:09,419 - INFO - Git diff before:
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..f8d7ab4ea5 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -414,6 +414,21 @@ class Model(metaclass=ModelBase):
+ 
+         # Set up the storage for instance state
+         self._state = ModelState()
++        self._state._in_init = True
++
++        pk_field = opts.pk
++        pk_explicitly_set = False
++        if pk_field:
++            if pk_field.name in kwargs or pk_field.attname in kwargs or 'pk' in kwargs:
++                pk_explicitly_set = True
++            else:
++                try:
++                    pk_index = opts.concrete_fields.index(pk_field)
++                    if len(args) > pk_index:
++                        pk_explicitly_set = True
++                except ValueError:
++                    pass
++        self._state._pk_explicitly_set = pk_explicitly_set
+ 
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+@@ -500,8 +515,15 @@ class Model(metaclass=ModelBase):
+             for kwarg in kwargs:
+                 raise TypeError("%s() got an unexpected keyword argument '%s'" % (cls.__name__, kwarg))
+         super().__init__()
++        self._state._in_init = False
+         post_init.send(sender=cls, instance=self)
+ 
++    def __setattr__(self, name, value):
++        if self._meta.pk and name in {self._meta.pk.name, self._meta.pk.attname, 'pk'}:
++            if not getattr(self._state, '_in_init', False):
++                self._state._pk_explicitly_set = True
++        super().__setattr__(name, value)
++
+     @classmethod
+     def from_db(cls, db, field_names, values):
+         if len(values) != len(cls._meta.concrete_fields):
+@@ -847,12 +869,14 @@ class Model(metaclass=ModelBase):
+         if not pk_set and (force_update or update_fields):
+             raise ValueError("Cannot force an update in save() with no primary key.")
+         updated = False
+-        # Skip an UPDATE when adding an instance and primary key has a default.
++        # Skip an UPDATE when adding an instance and primary key has a default
++        # and primary key was not explicitly set.
+         if (
+             not force_insert and
+             self._state.adding and
+             self._meta.pk.default and
+-            self._meta.pk.default is not NOT_PROVIDED
++            self._meta.pk.default is not NOT_PROVIDED and
++            not getattr(self._state, '_pk_explicitly_set', False)
+         ):
+             force_insert = True
+         # If possible, try an UPDATE. If that doesn't update anything, do an INSERT.
+2026-11-09 06:12:09,424 - INFO - Eval script for django__django-12209 written to logs/run_evaluation/agent-eval-seed0/gated-agent/django__django-12209/eval.sh; copying to container...
+2026-11-09 06:12:16,472 - INFO - Test runtime: 6.94 seconds
+2026-11-09 06:12:16,476 - INFO - Test output for django__django-12209 written to logs/run_evaluation/agent-eval-seed0/gated-agent/django__django-12209/test_output.txt
+2026-11-09 06:12:16,546 - INFO - Git diff after:
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..f8d7ab4ea5 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -414,6 +414,21 @@ class Model(metaclass=ModelBase):
+ 
+         # Set up the storage for instance state
+         self._state = ModelState()
++        self._state._in_init = True
++
++        pk_field = opts.pk
++        pk_explicitly_set = False
++        if pk_field:
++            if pk_field.name in kwargs or pk_field.attname in kwargs or 'pk' in kwargs:
++                pk_explicitly_set = True
++            else:
++                try:
++                    pk_index = opts.concrete_fields.index(pk_field)
++                    if len(args) > pk_index:
++                        pk_explicitly_set = True
++                except ValueError:
++                    pass
++        self._state._pk_explicitly_set = pk_explicitly_set
+ 
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+@@ -500,8 +515,15 @@ class Model(metaclass=ModelBase):
+             for kwarg in kwargs:
+                 raise TypeError("%s() got an unexpected keyword argument '%s'" % (cls.__name__, kwarg))
+         super().__init__()
++        self._state._in_init = False
+         post_init.send(sender=cls, instance=self)
+ 
++    def __setattr__(self, name, value):
++        if self._meta.pk and name in {self._meta.pk.name, self._meta.pk.attname, 'pk'}:
++            if not getattr(self._state, '_in_init', False):
++                self._state._pk_explicitly_set = True
++        super().__setattr__(name, value)
++
+     @classmethod
+     def from_db(cls, db, field_names, values):
+         if len(values) != len(cls._meta.concrete_fields):
+@@ -847,12 +869,14 @@ class Model(metaclass=ModelBase):
+         if not pk_set and (force_update or update_fields):
+             raise ValueError("Cannot force an update in save() with no primary key.")
+         updated = False
+-        # Skip an UPDATE when adding an instance and primary key has a default.
++        # Skip an UPDATE when adding an instance and primary key has a default
++        # and primary key was not explicitly set.
+         if (
+             not force_insert and
+             self._state.adding and
+             self._meta.pk.default and
+-            self._meta.pk.default is not NOT_PROVIDED
++            self._meta.pk.default is not NOT_PROVIDED and
++            not getattr(self._state, '_pk_explicitly_set', False)
+         ):
+             force_insert = True
+         # If possible, try an UPDATE. If that doesn't update anything, do an INSERT.
+2026-11-09 06:12:16,547 - INFO - Grading answer for django__django-12209...
+2026-11-09 06:12:16,552 - INFO - report: {'django__django-12209': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['partial(func, *args, **keywords) - new function with partial application'], 'failure': []}, 'PASS_TO_PASS': {'success': [], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-12209: resolved: True
+2026-11-09 06:12:16,557 - INFO - Attempting to stop container sweb.eval.django__django-12209.agent-eval-seed0...
+2026-11-09 06:12:31,968 - INFO - Container sweb.eval.django__django-12209.agent-eval-seed0 stopped successfully.
+2026-11-09 06:12:31,968 - INFO - Attempting to remove container sweb.eval.django__django-12209.agent-eval-seed0...
+2026-11-09 06:12:32,019 - INFO - Container sweb.eval.django__django-12209.agent-eval-seed0 removed successfully.

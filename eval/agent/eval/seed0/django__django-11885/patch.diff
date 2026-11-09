@@ -1,0 +1,49 @@
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index ae82d26340..2be7064f1c 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -1,4 +1,4 @@
+-from collections import Counter
++from collections import Counter, OrderedDict
+ from itertools import chain
+ from operator import attrgetter
+ 
+@@ -191,7 +191,7 @@ class Collector:
+         If 'keep_parents' is True, data of parent model's will be not deleted.
+         """
+         if self.can_fast_delete(objs):
+-            self.fast_deletes.append(objs)
++            self.fast_deletes.append((None, objs))
+             return
+         new_objs = self.add(objs, source, nullable,
+                             reverse_dependency=reverse_dependency)
+@@ -225,7 +225,7 @@ class Collector:
+                 for batch in batches:
+                     sub_objs = self.related_objects(related, batch)
+                     if self.can_fast_delete(sub_objs, from_field=field):
+-                        self.fast_deletes.append(sub_objs)
++                        self.fast_deletes.append((tuple(obj.pk for obj in batch), sub_objs))
+                     else:
+                         related_model = related.related_model
+                         # Non-referenced fields can be deferred if no signal
+@@ -310,9 +310,18 @@ class Collector:
+                     )
+ 
+             # fast deletes
+-            for qs in self.fast_deletes:
++            fast_deletes = OrderedDict()
++            for batch_key, qs in self.fast_deletes:
++                model = qs.model
++                key = (model, batch_key)
++                if key in fast_deletes:
++                    fast_deletes[key] = fast_deletes[key] | qs
++                else:
++                    fast_deletes[key] = qs
++
++            for (model, batch_key), qs in fast_deletes.items():
+                 count = qs._raw_delete(using=self.using)
+-                deleted_counter[qs.model._meta.label] += count
++                deleted_counter[model._meta.label] += count
+ 
+             # update fields
+             for model, instances_for_fieldvalues in self.field_updates.items():

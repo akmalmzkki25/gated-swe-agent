@@ -1,0 +1,72 @@
+2026-11-09 06:43:32,339 - INFO - Creating container for django__django-12209...
+2026-11-09 06:43:32,419 - INFO - Container for django__django-12209 created: 8370f628d82ad8a94515f6a5935bb56952411a94c5ea6982ffb7a578508b7ad6
+2026-11-09 06:43:32,585 - INFO - Container for django__django-12209 started: 8370f628d82ad8a94515f6a5935bb56952411a94c5ea6982ffb7a578508b7ad6
+2026-11-09 06:43:32,589 - INFO - Intermediate patch for django__django-12209 written to logs/run_evaluation/agent-eval-seed2/gated-agent/django__django-12209/patch.diff, now applying to container...
+2026-11-09 06:43:32,719 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/base.py...
+Applied patch django/db/models/base.py cleanly.
+
+2026-11-09 06:43:33,329 - INFO - Git diff before:
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..18f9b29b6d 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -840,6 +840,7 @@ class Model(metaclass=ModelBase):
+                        if f.name in update_fields or f.attname in update_fields]
+ 
+         pk_val = self._get_pk_val(meta)
++        pk_is_set = pk_val is not None
+         if pk_val is None:
+             pk_val = meta.pk.get_pk_value_on_save(self)
+             setattr(self, meta.pk.attname, pk_val)
+@@ -847,10 +848,12 @@ class Model(metaclass=ModelBase):
+         if not pk_set and (force_update or update_fields):
+             raise ValueError("Cannot force an update in save() with no primary key.")
+         updated = False
+-        # Skip an UPDATE when adding an instance and primary key has a default.
++        # Skip an UPDATE when adding an instance and primary key has a default
++        # and no explicit primary key was set on the instance.
+         if (
+             not force_insert and
+             self._state.adding and
++            not pk_is_set and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):
+2026-11-09 06:43:33,333 - INFO - Eval script for django__django-12209 written to logs/run_evaluation/agent-eval-seed2/gated-agent/django__django-12209/eval.sh; copying to container...
+2026-11-09 06:43:38,800 - INFO - Test runtime: 5.39 seconds
+2026-11-09 06:43:38,805 - INFO - Test output for django__django-12209 written to logs/run_evaluation/agent-eval-seed2/gated-agent/django__django-12209/test_output.txt
+2026-11-09 06:43:38,859 - INFO - Git diff after:
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..18f9b29b6d 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -840,6 +840,7 @@ class Model(metaclass=ModelBase):
+                        if f.name in update_fields or f.attname in update_fields]
+ 
+         pk_val = self._get_pk_val(meta)
++        pk_is_set = pk_val is not None
+         if pk_val is None:
+             pk_val = meta.pk.get_pk_value_on_save(self)
+             setattr(self, meta.pk.attname, pk_val)
+@@ -847,10 +848,12 @@ class Model(metaclass=ModelBase):
+         if not pk_set and (force_update or update_fields):
+             raise ValueError("Cannot force an update in save() with no primary key.")
+         updated = False
+-        # Skip an UPDATE when adding an instance and primary key has a default.
++        # Skip an UPDATE when adding an instance and primary key has a default
++        # and no explicit primary key was set on the instance.
+         if (
+             not force_insert and
+             self._state.adding and
++            not pk_is_set and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):
+2026-11-09 06:43:38,860 - INFO - Grading answer for django__django-12209...
+2026-11-09 06:43:38,864 - INFO - report: {'django__django-12209': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['partial(func, *args, **keywords) - new function with partial application'], 'failure': []}, 'PASS_TO_PASS': {'success': [], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-12209: resolved: True
+2026-11-09 06:43:38,868 - INFO - Attempting to stop container sweb.eval.django__django-12209.agent-eval-seed2...
+2026-11-09 06:43:54,257 - INFO - Container sweb.eval.django__django-12209.agent-eval-seed2 stopped successfully.
+2026-11-09 06:43:54,257 - INFO - Attempting to remove container sweb.eval.django__django-12209.agent-eval-seed2...
+2026-11-09 06:43:54,313 - INFO - Container sweb.eval.django__django-12209.agent-eval-seed2 removed successfully.

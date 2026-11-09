@@ -1,0 +1,33 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..b6798ab598 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -414,6 +414,12 @@ class Model(metaclass=ModelBase):
+ 
+         # Set up the storage for instance state
+         self._state = ModelState()
++        self._state.pk_is_explicit = (
++            'pk' in kwargs or
++            opts.pk.name in kwargs or
++            opts.pk.attname in kwargs or
++            any(f == opts.pk for f, val in zip(opts.concrete_fields, args) if val is not _DEFERRED)
++        )
+ 
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+@@ -569,6 +575,7 @@ class Model(metaclass=ModelBase):
+         return getattr(self, meta.pk.attname)
+ 
+     def _set_pk_val(self, value):
++        self._state.pk_is_explicit = True
+         return setattr(self, self._meta.pk.attname, value)
+ 
+     pk = property(_get_pk_val, _set_pk_val)
+@@ -851,6 +858,7 @@ class Model(metaclass=ModelBase):
+         if (
+             not force_insert and
+             self._state.adding and
++            not getattr(self._state, 'pk_is_explicit', False) and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):

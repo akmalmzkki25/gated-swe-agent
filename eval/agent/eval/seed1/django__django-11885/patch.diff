@@ -1,0 +1,34 @@
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index ae82d26340..e3392be9bc 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -214,6 +214,7 @@ class Collector:
+         if collect_related:
+             if keep_parents:
+                 parents = set(model._meta.get_parent_list())
++            fast_deletes_dict = {}
+             for related in get_candidate_relations_to_delete(model._meta):
+                 # Preserve parent reverse relationships if keep_parents=True.
+                 if keep_parents and related.model in parents:
+@@ -225,7 +226,11 @@ class Collector:
+                 for batch in batches:
+                     sub_objs = self.related_objects(related, batch)
+                     if self.can_fast_delete(sub_objs, from_field=field):
+-                        self.fast_deletes.append(sub_objs)
++                        key = (related.related_model, tuple(obj.pk for obj in batch))
++                        if key in fast_deletes_dict:
++                            fast_deletes_dict[key] |= sub_objs
++                        else:
++                            fast_deletes_dict[key] = sub_objs
+                     else:
+                         related_model = related.related_model
+                         # Non-referenced fields can be deferred if no signal
+@@ -243,6 +248,8 @@ class Collector:
+                             sub_objs = sub_objs.only(*tuple(referenced_fields))
+                         if sub_objs:
+                             field.remote_field.on_delete(self, field, sub_objs, self.using)
++            for qs in fast_deletes_dict.values():
++                self.fast_deletes.append(qs)
+             for field in model._meta.private_fields:
+                 if hasattr(field, 'bulk_related_objects'):
+                     # It's something like generic foreign key.

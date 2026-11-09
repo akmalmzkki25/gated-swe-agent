@@ -1,0 +1,5 @@
+{
+  "text": "```diff\ndiff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -1071,7 +1071,7 @@\n             if docstring:\n                 lines.append(docstring)\n \n-        elif inspect.isabstractmethod(meth):\n+        elif inspect.isabstractmethod(meth) or getattr(meth, '__isabstractmethod__', False):\n             # needs to be tested above isdescriptor,\n             # because abstractmethods can be descriptors\n             pass\n```",
+  "diff": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -1071,7 +1071,7 @@\n             if docstring:\n                 lines.append(docstring)\n \n-        elif inspect.isabstractmethod(meth):\n+        elif inspect.isabstractmethod(meth) or getattr(meth, '__isabstractmethod__', False):\n             # needs to be tested above isdescriptor,\n             # because abstractmethods can be descriptors\n             pass\n",
+  "cost": 0.00039940000000000006
+}

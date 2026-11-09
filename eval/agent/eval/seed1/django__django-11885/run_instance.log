@@ -1,0 +1,88 @@
+2026-11-09 06:28:56,035 - INFO - Creating container for django__django-11885...
+2026-11-09 06:28:56,118 - INFO - Container for django__django-11885 created: bd4009b70ef8f534966524cad0c7b9c97cb80d68fe4541f91a57be63981b6561
+2026-11-09 06:28:56,295 - INFO - Container for django__django-11885 started: bd4009b70ef8f534966524cad0c7b9c97cb80d68fe4541f91a57be63981b6561
+2026-11-09 06:28:56,300 - INFO - Intermediate patch for django__django-11885 written to logs/run_evaluation/agent-eval-seed1/gated-agent/django__django-11885/patch.diff, now applying to container...
+2026-11-09 06:28:56,443 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/deletion.py...
+Applied patch django/db/models/deletion.py cleanly.
+
+2026-11-09 06:28:57,192 - INFO - Git diff before:
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index ae82d26340..e3392be9bc 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -214,6 +214,7 @@ class Collector:
+         if collect_related:
+             if keep_parents:
+                 parents = set(model._meta.get_parent_list())
++            fast_deletes_dict = {}
+             for related in get_candidate_relations_to_delete(model._meta):
+                 # Preserve parent reverse relationships if keep_parents=True.
+                 if keep_parents and related.model in parents:
+@@ -225,7 +226,11 @@ class Collector:
+                 for batch in batches:
+                     sub_objs = self.related_objects(related, batch)
+                     if self.can_fast_delete(sub_objs, from_field=field):
+-                        self.fast_deletes.append(sub_objs)
++                        key = (related.related_model, tuple(obj.pk for obj in batch))
++                        if key in fast_deletes_dict:
++                            fast_deletes_dict[key] |= sub_objs
++                        else:
++                            fast_deletes_dict[key] = sub_objs
+                     else:
+                         related_model = related.related_model
+                         # Non-referenced fields can be deferred if no signal
+@@ -243,6 +248,8 @@ class Collector:
+                             sub_objs = sub_objs.only(*tuple(referenced_fields))
+                         if sub_objs:
+                             field.remote_field.on_delete(self, field, sub_objs, self.using)
++            for qs in fast_deletes_dict.values():
++                self.fast_deletes.append(qs)
+             for field in model._meta.private_fields:
+                 if hasattr(field, 'bulk_related_objects'):
+                     # It's something like generic foreign key.
+2026-11-09 06:28:57,196 - INFO - Eval script for django__django-11885 written to logs/run_evaluation/agent-eval-seed1/gated-agent/django__django-11885/eval.sh; copying to container...
+2026-11-09 06:29:02,633 - INFO - Test runtime: 5.35 seconds
+2026-11-09 06:29:02,637 - INFO - Test output for django__django-11885 written to logs/run_evaluation/agent-eval-seed1/gated-agent/django__django-11885/test_output.txt
+2026-11-09 06:29:02,689 - INFO - Git diff after:
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index ae82d26340..e3392be9bc 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -214,6 +214,7 @@ class Collector:
+         if collect_related:
+             if keep_parents:
+                 parents = set(model._meta.get_parent_list())
++            fast_deletes_dict = {}
+             for related in get_candidate_relations_to_delete(model._meta):
+                 # Preserve parent reverse relationships if keep_parents=True.
+                 if keep_parents and related.model in parents:
+@@ -225,7 +226,11 @@ class Collector:
+                 for batch in batches:
+                     sub_objs = self.related_objects(related, batch)
+                     if self.can_fast_delete(sub_objs, from_field=field):
+-                        self.fast_deletes.append(sub_objs)
++                        key = (related.related_model, tuple(obj.pk for obj in batch))
++                        if key in fast_deletes_dict:
++                            fast_deletes_dict[key] |= sub_objs
++                        else:
++                            fast_deletes_dict[key] = sub_objs
+                     else:
+                         related_model = related.related_model
+                         # Non-referenced fields can be deferred if no signal
+@@ -243,6 +248,8 @@ class Collector:
+                             sub_objs = sub_objs.only(*tuple(referenced_fields))
+                         if sub_objs:
+                             field.remote_field.on_delete(self, field, sub_objs, self.using)
++            for qs in fast_deletes_dict.values():
++                self.fast_deletes.append(qs)
+             for field in model._meta.private_fields:
+                 if hasattr(field, 'bulk_related_objects'):
+                     # It's something like generic foreign key.
+2026-11-09 06:29:02,689 - INFO - Grading answer for django__django-11885...
+2026-11-09 06:29:02,693 - INFO - report: {'django__django-11885': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_fast_delete_combined_relationships (delete.tests.FastDeleteTests)'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests)', 'test_fast_delete_fk (delete.tests.FastDeleteTests)', 'test_fast_delete_inheritance (delete.tests.FastDeleteTests)', 'test_fast_delete_instance_set_pk_none (delete.tests.FastDeleteTests)', 'test_fast_delete_joined_qs (delete.tests.FastDeleteTests)', 'test_fast_delete_large_batch (delete.tests.FastDeleteTests)', 'test_fast_delete_m2m (delete.tests.FastDeleteTests)', 'test_fast_delete_qs (delete.tests.FastDeleteTests)', 'test_fast_delete_revm2m (delete.tests.FastDeleteTests)', 'test_auto (delete.tests.OnDeleteTests)', 'test_auto_nullable (delete.tests.OnDeleteTests)', 'test_cascade (delete.tests.OnDeleteTests)', 'test_cascade_from_child (delete.tests.OnDeleteTests)', 'test_cascade_from_parent (delete.tests.OnDeleteTests)', 'test_cascade_nullable (delete.tests.OnDeleteTests)', 'test_do_nothing (delete.tests.OnDeleteTests)', 'test_do_nothing_qscount (delete.tests.OnDeleteTests)', 'test_inheritance_cascade_down (delete.tests.OnDeleteTests)', 'test_inheritance_cascade_up (delete.tests.OnDeleteTests)', 'test_non_callable (delete.tests.OnDeleteTests)', 'test_o2o_setnull (delete.tests.OnDeleteTests)', 'test_protect (delete.tests.OnDeleteTests)', 'test_setdefault (delete.tests.OnDeleteTests)', 'test_setdefault_none (delete.tests.OnDeleteTests)', 'test_setnull (delete.tests.OnDeleteTests)', 'test_setnull_from_child (delete.tests.OnDeleteTests)', 'test_setnull_from_parent (delete.tests.OnDeleteTests)', 'test_setvalue (delete.tests.OnDeleteTests)', 'test_bulk (delete.tests.DeletionTests)', 'test_can_defer_constraint_checks (delete.tests.DeletionTests)', 'test_delete_with_keeping_parents (delete.tests.DeletionTests)', 'test_delete_with_keeping_parents_relationships (delete.tests.DeletionTests)', 'test_deletion_order (delete.tests.DeletionTests)', 'test_hidden_related (delete.tests.DeletionTests)', 'test_instance_update (delete.tests.DeletionTests)', 'test_large_delete (delete.tests.DeletionTests)', 'test_large_delete_related (delete.tests.DeletionTests)', 'test_m2m (delete.tests.DeletionTests)', 'test_model_delete_returns_num_rows (delete.tests.DeletionTests)', 'test_only_referenced_fields_selected (delete.tests.DeletionTests)', 'test_proxied_model_duplicate_queries (delete.tests.DeletionTests)', 'test_queryset_delete_returns_num_rows (delete.tests.DeletionTests)', 'test_relational_post_delete_signals_happen_before_parent_object (delete.tests.DeletionTests)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-11885: resolved: True
+2026-11-09 06:29:02,697 - INFO - Attempting to stop container sweb.eval.django__django-11885.agent-eval-seed1...
+2026-11-09 06:29:18,028 - INFO - Container sweb.eval.django__django-11885.agent-eval-seed1 stopped successfully.
+2026-11-09 06:29:18,029 - INFO - Attempting to remove container sweb.eval.django__django-11885.agent-eval-seed1...
+2026-11-09 06:29:18,075 - INFO - Container sweb.eval.django__django-11885.agent-eval-seed1 removed successfully.

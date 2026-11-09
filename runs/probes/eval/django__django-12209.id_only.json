@@ -1,0 +1,5 @@
+{
+  "text": "```diff\ndiff --git a/django/db/models/base.py b/django/db/models/base.py\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -1127,7 +1127,7 @@ class Model(object):\n             if field.primary_key:\n                 op_EQ = AND\n                 connect_index = 1\n-            value = getattr(self, field.attname)\n+            value = getattr(self, field.attname, None)\n             if value is not None:\n                 if field.remote_field:\n                     zone_queries.append(\n```",
+  "diff": "diff --git a/django/db/models/base.py b/django/db/models/base.py\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -1127,7 +1127,7 @@ class Model(object):\n             if field.primary_key:\n                 op_EQ = AND\n                 connect_index = 1\n-            value = getattr(self, field.attname)\n+            value = getattr(self, field.attname, None)\n             if value is not None:\n                 if field.remote_field:\n                     zone_queries.append(\n",
+  "cost": 0.00040600000000000006
+}

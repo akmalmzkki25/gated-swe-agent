@@ -1,0 +1,86 @@
+2026-11-09 06:28:31,953 - INFO - Creating container for django__django-12209...
+2026-11-09 06:28:32,033 - INFO - Container for django__django-12209 created: 7b8402d1f7212e640acece7ffe7f5e0c38c2db655f7a16d7376239c125e81160
+2026-11-09 06:28:32,259 - INFO - Container for django__django-12209 started: 7b8402d1f7212e640acece7ffe7f5e0c38c2db655f7a16d7376239c125e81160
+2026-11-09 06:28:32,264 - INFO - Intermediate patch for django__django-12209 written to logs/run_evaluation/agent-eval-seed1/gated-agent/django__django-12209/patch.diff, now applying to container...
+2026-11-09 06:28:32,417 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/base.py...
+Applied patch django/db/models/base.py cleanly.
+
+2026-11-09 06:28:33,115 - INFO - Git diff before:
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..b6798ab598 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -414,6 +414,12 @@ class Model(metaclass=ModelBase):
+ 
+         # Set up the storage for instance state
+         self._state = ModelState()
++        self._state.pk_is_explicit = (
++            'pk' in kwargs or
++            opts.pk.name in kwargs or
++            opts.pk.attname in kwargs or
++            any(f == opts.pk for f, val in zip(opts.concrete_fields, args) if val is not _DEFERRED)
++        )
+ 
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+@@ -569,6 +575,7 @@ class Model(metaclass=ModelBase):
+         return getattr(self, meta.pk.attname)
+ 
+     def _set_pk_val(self, value):
++        self._state.pk_is_explicit = True
+         return setattr(self, self._meta.pk.attname, value)
+ 
+     pk = property(_get_pk_val, _set_pk_val)
+@@ -851,6 +858,7 @@ class Model(metaclass=ModelBase):
+         if (
+             not force_insert and
+             self._state.adding and
++            not getattr(self._state, 'pk_is_explicit', False) and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):
+2026-11-09 06:28:33,120 - INFO - Eval script for django__django-12209 written to logs/run_evaluation/agent-eval-seed1/gated-agent/django__django-12209/eval.sh; copying to container...
+2026-11-09 06:28:40,386 - INFO - Test runtime: 7.17 seconds
+2026-11-09 06:28:40,390 - INFO - Test output for django__django-12209 written to logs/run_evaluation/agent-eval-seed1/gated-agent/django__django-12209/test_output.txt
+2026-11-09 06:28:40,452 - INFO - Git diff after:
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index e3b14a41a0..b6798ab598 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -414,6 +414,12 @@ class Model(metaclass=ModelBase):
+ 
+         # Set up the storage for instance state
+         self._state = ModelState()
++        self._state.pk_is_explicit = (
++            'pk' in kwargs or
++            opts.pk.name in kwargs or
++            opts.pk.attname in kwargs or
++            any(f == opts.pk for f, val in zip(opts.concrete_fields, args) if val is not _DEFERRED)
++        )
+ 
+         # There is a rather weird disparity here; if kwargs, it's set, then args
+         # overrides it. It should be one or the other; don't duplicate the work
+@@ -569,6 +575,7 @@ class Model(metaclass=ModelBase):
+         return getattr(self, meta.pk.attname)
+ 
+     def _set_pk_val(self, value):
++        self._state.pk_is_explicit = True
+         return setattr(self, self._meta.pk.attname, value)
+ 
+     pk = property(_get_pk_val, _set_pk_val)
+@@ -851,6 +858,7 @@ class Model(metaclass=ModelBase):
+         if (
+             not force_insert and
+             self._state.adding and
++            not getattr(self._state, 'pk_is_explicit', False) and
+             self._meta.pk.default and
+             self._meta.pk.default is not NOT_PROVIDED
+         ):
+2026-11-09 06:28:40,452 - INFO - Grading answer for django__django-12209...
+2026-11-09 06:28:40,457 - INFO - report: {'django__django-12209': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['partial(func, *args, **keywords) - new function with partial application'], 'failure': []}, 'PASS_TO_PASS': {'success': [], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-12209: resolved: True
+2026-11-09 06:28:40,463 - INFO - Attempting to stop container sweb.eval.django__django-12209.agent-eval-seed1...
+2026-11-09 06:28:55,931 - INFO - Container sweb.eval.django__django-12209.agent-eval-seed1 stopped successfully.
+2026-11-09 06:28:55,932 - INFO - Attempting to remove container sweb.eval.django__django-12209.agent-eval-seed1...
+2026-11-09 06:28:55,988 - INFO - Container sweb.eval.django__django-12209.agent-eval-seed1 removed successfully.

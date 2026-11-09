@@ -1,0 +1,118 @@
+2026-11-09 06:12:32,072 - INFO - Creating container for django__django-11885...
+2026-11-09 06:12:32,158 - INFO - Container for django__django-11885 created: 7c142e229f9ee9a293d8e2327f488c16977ac5eba95c776e85767d4bcc213a8a
+2026-11-09 06:12:32,322 - INFO - Container for django__django-11885 started: 7c142e229f9ee9a293d8e2327f488c16977ac5eba95c776e85767d4bcc213a8a
+2026-11-09 06:12:32,327 - INFO - Intermediate patch for django__django-11885 written to logs/run_evaluation/agent-eval-seed0/gated-agent/django__django-11885/patch.diff, now applying to container...
+2026-11-09 06:12:32,477 - INFO - >>>>> Applied Patch:
+Checking patch django/db/models/deletion.py...
+Applied patch django/db/models/deletion.py cleanly.
+
+2026-11-09 06:12:33,238 - INFO - Git diff before:
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index ae82d26340..2be7064f1c 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -1,4 +1,4 @@
+-from collections import Counter
++from collections import Counter, OrderedDict
+ from itertools import chain
+ from operator import attrgetter
+ 
+@@ -191,7 +191,7 @@ class Collector:
+         If 'keep_parents' is True, data of parent model's will be not deleted.
+         """
+         if self.can_fast_delete(objs):
+-            self.fast_deletes.append(objs)
++            self.fast_deletes.append((None, objs))
+             return
+         new_objs = self.add(objs, source, nullable,
+                             reverse_dependency=reverse_dependency)
+@@ -225,7 +225,7 @@ class Collector:
+                 for batch in batches:
+                     sub_objs = self.related_objects(related, batch)
+                     if self.can_fast_delete(sub_objs, from_field=field):
+-                        self.fast_deletes.append(sub_objs)
++                        self.fast_deletes.append((tuple(obj.pk for obj in batch), sub_objs))
+                     else:
+                         related_model = related.related_model
+                         # Non-referenced fields can be deferred if no signal
+@@ -310,9 +310,18 @@ class Collector:
+                     )
+ 
+             # fast deletes
+-            for qs in self.fast_deletes:
++            fast_deletes = OrderedDict()
++            for batch_key, qs in self.fast_deletes:
++                model = qs.model
++                key = (model, batch_key)
++                if key in fast_deletes:
++                    fast_deletes[key] = fast_deletes[key] | qs
++                else:
++                    fast_deletes[key] = qs
++
++            for (model, batch_key), qs in fast_deletes.items():
+                 count = qs._raw_delete(using=self.using)
+-                deleted_counter[qs.model._meta.label] += count
++                deleted_counter[model._meta.label] += count
+ 
+             # update fields
+             for model, instances_for_fieldvalues in self.field_updates.items():
+2026-11-09 06:12:33,243 - INFO - Eval script for django__django-11885 written to logs/run_evaluation/agent-eval-seed0/gated-agent/django__django-11885/eval.sh; copying to container...
+2026-11-09 06:12:38,686 - INFO - Test runtime: 5.35 seconds
+2026-11-09 06:12:38,690 - INFO - Test output for django__django-11885 written to logs/run_evaluation/agent-eval-seed0/gated-agent/django__django-11885/test_output.txt
+2026-11-09 06:12:38,744 - INFO - Git diff after:
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index ae82d26340..2be7064f1c 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -1,4 +1,4 @@
+-from collections import Counter
++from collections import Counter, OrderedDict
+ from itertools import chain
+ from operator import attrgetter
+ 
+@@ -191,7 +191,7 @@ class Collector:
+         If 'keep_parents' is True, data of parent model's will be not deleted.
+         """
+         if self.can_fast_delete(objs):
+-            self.fast_deletes.append(objs)
++            self.fast_deletes.append((None, objs))
+             return
+         new_objs = self.add(objs, source, nullable,
+                             reverse_dependency=reverse_dependency)
+@@ -225,7 +225,7 @@ class Collector:
+                 for batch in batches:
+                     sub_objs = self.related_objects(related, batch)
+                     if self.can_fast_delete(sub_objs, from_field=field):
+-                        self.fast_deletes.append(sub_objs)
++                        self.fast_deletes.append((tuple(obj.pk for obj in batch), sub_objs))
+                     else:
+                         related_model = related.related_model
+                         # Non-referenced fields can be deferred if no signal
+@@ -310,9 +310,18 @@ class Collector:
+                     )
+ 
+             # fast deletes
+-            for qs in self.fast_deletes:
++            fast_deletes = OrderedDict()
++            for batch_key, qs in self.fast_deletes:
++                model = qs.model
++                key = (model, batch_key)
++                if key in fast_deletes:
++                    fast_deletes[key] = fast_deletes[key] | qs
++                else:
++                    fast_deletes[key] = qs
++
++            for (model, batch_key), qs in fast_deletes.items():
+                 count = qs._raw_delete(using=self.using)
+-                deleted_counter[qs.model._meta.label] += count
++                deleted_counter[model._meta.label] += count
+ 
+             # update fields
+             for model, instances_for_fieldvalues in self.field_updates.items():
+2026-11-09 06:12:38,745 - INFO - Grading answer for django__django-11885...
+2026-11-09 06:12:38,750 - INFO - report: {'django__django-11885': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_fast_delete_combined_relationships (delete.tests.FastDeleteTests)'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests)', 'test_fast_delete_fk (delete.tests.FastDeleteTests)', 'test_fast_delete_inheritance (delete.tests.FastDeleteTests)', 'test_fast_delete_instance_set_pk_none (delete.tests.FastDeleteTests)', 'test_fast_delete_joined_qs (delete.tests.FastDeleteTests)', 'test_fast_delete_large_batch (delete.tests.FastDeleteTests)', 'test_fast_delete_m2m (delete.tests.FastDeleteTests)', 'test_fast_delete_qs (delete.tests.FastDeleteTests)', 'test_fast_delete_revm2m (delete.tests.FastDeleteTests)', 'test_auto (delete.tests.OnDeleteTests)', 'test_auto_nullable (delete.tests.OnDeleteTests)', 'test_cascade (delete.tests.OnDeleteTests)', 'test_cascade_from_child (delete.tests.OnDeleteTests)', 'test_cascade_from_parent (delete.tests.OnDeleteTests)', 'test_cascade_nullable (delete.tests.OnDeleteTests)', 'test_do_nothing (delete.tests.OnDeleteTests)', 'test_do_nothing_qscount (delete.tests.OnDeleteTests)', 'test_inheritance_cascade_down (delete.tests.OnDeleteTests)', 'test_inheritance_cascade_up (delete.tests.OnDeleteTests)', 'test_non_callable (delete.tests.OnDeleteTests)', 'test_o2o_setnull (delete.tests.OnDeleteTests)', 'test_protect (delete.tests.OnDeleteTests)', 'test_setdefault (delete.tests.OnDeleteTests)', 'test_setdefault_none (delete.tests.OnDeleteTests)', 'test_setnull (delete.tests.OnDeleteTests)', 'test_setnull_from_child (delete.tests.OnDeleteTests)', 'test_setnull_from_parent (delete.tests.OnDeleteTests)', 'test_setvalue (delete.tests.OnDeleteTests)', 'test_bulk (delete.tests.DeletionTests)', 'test_can_defer_constraint_checks (delete.tests.DeletionTests)', 'test_delete_with_keeping_parents (delete.tests.DeletionTests)', 'test_delete_with_keeping_parents_relationships (delete.tests.DeletionTests)', 'test_deletion_order (delete.tests.DeletionTests)', 'test_hidden_related (delete.tests.DeletionTests)', 'test_instance_update (delete.tests.DeletionTests)', 'test_large_delete (delete.tests.DeletionTests)', 'test_large_delete_related (delete.tests.DeletionTests)', 'test_m2m (delete.tests.DeletionTests)', 'test_model_delete_returns_num_rows (delete.tests.DeletionTests)', 'test_only_referenced_fields_selected (delete.tests.DeletionTests)', 'test_proxied_model_duplicate_queries (delete.tests.DeletionTests)', 'test_queryset_delete_returns_num_rows (delete.tests.DeletionTests)', 'test_relational_post_delete_signals_happen_before_parent_object (delete.tests.DeletionTests)'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for django__django-11885: resolved: True
+2026-11-09 06:12:38,754 - INFO - Attempting to stop container sweb.eval.django__django-11885.agent-eval-seed0...
+2026-11-09 06:12:54,125 - INFO - Container sweb.eval.django__django-11885.agent-eval-seed0 stopped successfully.
+2026-11-09 06:12:54,125 - INFO - Attempting to remove container sweb.eval.django__django-11885.agent-eval-seed0...
+2026-11-09 06:12:54,177 - INFO - Container sweb.eval.django__django-11885.agent-eval-seed0 removed successfully.

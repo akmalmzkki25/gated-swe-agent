@@ -1,0 +1,614 @@
+{
+  "astropy__astropy-12907": {
+    "runs": {
+      "baseline/seed0": {
+        "overlap": 1.0,
+        "memorized": [
+          "cright[-right.shape[0]:, -right.shape[1]:] = right"
+        ],
+        "first_edit_step": 8,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0",
+          "1 gold line(s) not in the issue"
+        ]
+      },
+      "baseline/seed1": {
+        "overlap": 1.0,
+        "memorized": [
+          "cright[-right.shape[0]:, -right.shape[1]:] = right"
+        ],
+        "first_edit_step": 8,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0",
+          "1 gold line(s) not in the issue"
+        ]
+      },
+      "baseline/seed2": {
+        "overlap": 1.0,
+        "memorized": [
+          "cright[-right.shape[0]:, -right.shape[1]:] = right"
+        ],
+        "first_edit_step": 14,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0",
+          "1 gold line(s) not in the issue"
+        ]
+      },
+      "agent/seed0": {
+        "overlap": 1.0,
+        "memorized": [
+          "cright[-right.shape[0]:, -right.shape[1]:] = right"
+        ],
+        "first_edit_step": 7,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0",
+          "1 gold line(s) not in the issue"
+        ]
+      },
+      "agent/seed1": {
+        "overlap": 1.0,
+        "memorized": [
+          "cright[-right.shape[0]:, -right.shape[1]:] = right"
+        ],
+        "first_edit_step": 10,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0",
+          "1 gold line(s) not in the issue"
+        ]
+      },
+      "agent/seed2": {
+        "overlap": 1.0,
+        "memorized": [
+          "cright[-right.shape[0]:, -right.shape[1]:] = right"
+        ],
+        "first_edit_step": 14,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0",
+          "1 gold line(s) not in the issue"
+        ]
+      }
+    },
+    "probes": {
+      "id_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      },
+      "issue_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      }
+    }
+  },
+  "django__django-11790": {
+    "runs": {
+      "baseline/seed0": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": null,
+        "first_edit_read_before": null,
+        "resolved": false,
+        "flags": []
+      },
+      "baseline/seed1": {
+        "overlap": 0.667,
+        "memorized": [
+          "self.fields['username'].max_length = username_max_length",
+          "username_max_length = self.username_field.max_length or 254"
+        ],
+        "first_edit_step": 27,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": [
+          "2 gold line(s) not in the issue"
+        ]
+      },
+      "baseline/seed2": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 24,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "agent/seed0": {
+        "overlap": 0.667,
+        "memorized": [
+          "self.fields['username'].max_length = username_max_length",
+          "username_max_length = self.username_field.max_length or 254"
+        ],
+        "first_edit_step": 21,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": [
+          "2 gold line(s) not in the issue"
+        ]
+      },
+      "agent/seed1": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 18,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": []
+      },
+      "agent/seed2": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 27,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": []
+      }
+    },
+    "probes": {
+      "id_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      },
+      "issue_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      }
+    }
+  },
+  "django__django-11848": {
+    "runs": {
+      "baseline/seed0": {
+        "overlap": 0.2,
+        "memorized": [
+          "current_year = datetime.datetime.utcnow().year"
+        ],
+        "first_edit_step": null,
+        "first_edit_read_before": null,
+        "resolved": true,
+        "flags": [
+          "1 gold line(s) not in the issue"
+        ]
+      },
+      "baseline/seed1": {
+        "overlap": 0.2,
+        "memorized": [
+          "current_year = datetime.datetime.utcnow().year"
+        ],
+        "first_edit_step": 13,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "1 gold line(s) not in the issue"
+        ]
+      },
+      "baseline/seed2": {
+        "overlap": 0.2,
+        "memorized": [
+          "current_year = datetime.datetime.utcnow().year"
+        ],
+        "first_edit_step": 11,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "1 gold line(s) not in the issue"
+        ]
+      },
+      "agent/seed0": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 14,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": []
+      },
+      "agent/seed1": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 9,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": []
+      },
+      "agent/seed2": {
+        "overlap": 0.2,
+        "memorized": [
+          "current_year = datetime.datetime.utcnow().year"
+        ],
+        "first_edit_step": 17,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "1 gold line(s) not in the issue"
+        ]
+      }
+    },
+    "probes": {
+      "id_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      },
+      "issue_only": {
+        "overlap": 0.2,
+        "memorized": [
+          "current_year = datetime.datetime.utcnow().year"
+        ],
+        "flags": [
+          "1 gold line(s) not in the issue"
+        ]
+      }
+    }
+  },
+  "sphinx-doc__sphinx-10435": {
+    "runs": {
+      "baseline/seed0": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 25,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": []
+      },
+      "baseline/seed1": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 24,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": []
+      },
+      "baseline/seed2": {
+        "overlap": 0.333,
+        "memorized": [
+          "self.body.append('%' + CR + '}}')"
+        ],
+        "first_edit_step": null,
+        "first_edit_read_before": null,
+        "resolved": true,
+        "flags": [
+          "1 gold line(s) not in the issue"
+        ]
+      },
+      "agent/seed0": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 54,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": []
+      },
+      "agent/seed1": {
+        "overlap": 0.333,
+        "memorized": [
+          "self.body.append('%' + CR + '}}')"
+        ],
+        "first_edit_step": 14,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": [
+          "1 gold line(s) not in the issue"
+        ]
+      },
+      "agent/seed2": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 65,
+        "first_edit_read_before": true,
+        "resolved": false,
+        "flags": []
+      }
+    },
+    "probes": {
+      "id_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      },
+      "issue_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      }
+    }
+  },
+  "sphinx-doc__sphinx-10323": {
+    "runs": {
+      "baseline/seed0": {
+        "overlap": 1.0,
+        "memorized": [],
+        "first_edit_step": null,
+        "first_edit_read_before": null,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0"
+        ]
+      },
+      "baseline/seed1": {
+        "overlap": 1.0,
+        "memorized": [],
+        "first_edit_step": null,
+        "first_edit_read_before": null,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0"
+        ]
+      },
+      "baseline/seed2": {
+        "overlap": 1.0,
+        "memorized": [],
+        "first_edit_step": 12,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0"
+        ]
+      },
+      "agent/seed0": {
+        "overlap": 1.0,
+        "memorized": [],
+        "first_edit_step": 17,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0"
+        ]
+      },
+      "agent/seed1": {
+        "overlap": 1.0,
+        "memorized": [],
+        "first_edit_step": 13,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0"
+        ]
+      },
+      "agent/seed2": {
+        "overlap": 1.0,
+        "memorized": [],
+        "first_edit_step": 12,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "overlap 1.0"
+        ]
+      }
+    },
+    "probes": {
+      "id_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      },
+      "issue_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      }
+    }
+  },
+  "django__django-12209": {
+    "runs": {
+      "baseline/seed0": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 16,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "baseline/seed1": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 48,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "baseline/seed2": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 15,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "agent/seed0": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 27,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "agent/seed1": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 32,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "agent/seed2": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 42,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      }
+    },
+    "probes": {
+      "id_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      },
+      "issue_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      }
+    }
+  },
+  "sphinx-doc__sphinx-7757": {
+    "runs": {
+      "baseline/seed0": {
+        "overlap": 0.188,
+        "memorized": [
+          "default = Parameter.empty",
+          "default=default, annotation=annotation))"
+        ],
+        "first_edit_step": 17,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "2 gold line(s) not in the issue"
+        ]
+      },
+      "baseline/seed1": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 13,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "baseline/seed2": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 21,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "agent/seed0": {
+        "overlap": 0.188,
+        "memorized": [
+          "default = Parameter.empty",
+          "default=default, annotation=annotation))"
+        ],
+        "first_edit_step": 11,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "2 gold line(s) not in the issue"
+        ]
+      },
+      "agent/seed1": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 12,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "agent/seed2": {
+        "overlap": 0.125,
+        "memorized": [
+          "default=default, annotation=annotation))",
+          "defaults = list(args.defaults)"
+        ],
+        "first_edit_step": 18,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "2 gold line(s) not in the issue"
+        ]
+      }
+    },
+    "probes": {
+      "id_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      },
+      "issue_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      }
+    }
+  },
+  "django__django-11885": {
+    "runs": {
+      "baseline/seed0": {
+        "overlap": 0.019,
+        "memorized": [],
+        "first_edit_step": null,
+        "first_edit_read_before": null,
+        "resolved": false,
+        "flags": []
+      },
+      "baseline/seed1": {
+        "overlap": 0.037,
+        "memorized": [
+          "field = related.field",
+          "related_model = related.related_model"
+        ],
+        "first_edit_step": 29,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": [
+          "2 gold line(s) not in the issue"
+        ]
+      },
+      "baseline/seed2": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 25,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "agent/seed0": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 24,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "agent/seed1": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 26,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      },
+      "agent/seed2": {
+        "overlap": 0.0,
+        "memorized": [],
+        "first_edit_step": 34,
+        "first_edit_read_before": true,
+        "resolved": true,
+        "flags": []
+      }
+    },
+    "probes": {
+      "id_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      },
+      "issue_only": {
+        "overlap": 0.0,
+        "memorized": [],
+        "flags": []
+      }
+    }
+  }
+}
