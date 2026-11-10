@@ -7,3 +7,4 @@ __pycache__/
 logs/
 *.egg-info/
 ai-logs/
+scripts/.redact_terms
